@@ -1,0 +1,35 @@
+{
+  "dependencies": {
+    "axios": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.1.1",
+    "express": "^4.18.2",
+    "firebase-admin": "^11.8.0",
+    "form-data": "^4.0.0",
+    "generate-password": "^1.7.1",
+    "ipfs-http-client": "^60.0.1",
+    "mime": "^3.0.0",
+    "mongoose": "^8.2.4",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^3.3.1",
+    "nodemon": "^2.0.22",
+    "openai": "^3.3.0",
+    "winston": "^3.13.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomiclabs/hardhat-web3": "^2.0.0",
+    "hardhat": "^2.22.2",
+    "web3": "^1.10.4"
+  }
+}
