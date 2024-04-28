@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Box, Flex, Spacer, IconButton, Input, InputGroup, InputRightElement, Circle, useColorMode, Avatar, Button, HStack, Image, Heading, Text } from '@chakra-ui/react';
 import { FaArrowDown, FaBell, FaChevronDown, FaSearch, FaSortDown, FaSun, FaUser } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
-import Logo from '../../assets/logo.png';
+
 import { useEffect } from 'react';
 import { useContext } from 'react';
-import AuthContext from '../../pages/UserPages/AuthContext';
+import AuthContext from '../../pages/StudentPages/AuthContext';
 import { MdArrowDropDown, MdOutlineArrowDropDown, MdPinDrop } from 'react-icons/md';
 import ProfileSection from '../signup-page/Dropdown';
 
@@ -33,7 +33,7 @@ const Header = () => {
       <Flex align="center" justifyContent={'space-between'}  width="100%">
         {/* Logo */}
         <Flex w={'70px'} h={'70px'}  alignItems={'center'} justifyContent={'center'} borderRadius={'50%'}    bg={'white'}>
-          <Image mb={'10px'} ml={'6px'}  src={Logo} alt="Logo" width={'50px'} />
+         <Text fontSize={'30px'} color={'btng'}>M</Text>
          
         </Flex>
 

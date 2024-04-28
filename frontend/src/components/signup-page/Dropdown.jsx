@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { Box, IconButton, Text, Button } from '@chakra-ui/react';
 import { FaUser } from 'react-icons/fa';
-import { auth } from '../../pages/UserPages/firebase-auth';
+import { auth } from '../../pages/StudentPages/firebase-auth';
 import { useNavigate } from 'react-router-dom';
-import AuthContext from '../../pages/UserPages/AuthContext';
+import AuthContext from '../../pages/StudentPages/AuthContext';
 
 export default function Dropdown({handleToggleDropdown }) {
   

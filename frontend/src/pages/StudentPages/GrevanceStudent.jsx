@@ -3,7 +3,7 @@ import { Box, Heading, Button, Table, Thead, Tbody, Tr, Th, Td} from '@chakra-ui
 
 import { Link } from 'react-router-dom';
 
-function Grievance() {
+function GrievanceStudent() {
     const earlierSubmissions = [
         { id: 1, status: 'Resolved', ticketDate: '2024-04-20', ticketType: 'Complaint', subject: 'Issue with billing' },
         { id: 2, status: 'Not Resolved', ticketDate: '2024-04-25', ticketType: 'Issue', subject: 'Problem with service' },
@@ -13,7 +13,7 @@ function Grievance() {
         <Box p={8} width="80%" ml="10%" >
           <Box mb={4} display="flex" justifyContent="space-between" alignItems="center">
             <Heading as="h2" size="xl">Earlier Submissions</Heading>
-            <Button as={Link} to="/create-ticket" colorScheme="blue">Create New Ticket</Button>
+            <Button as={Link} to="/create-ticket/null" colorScheme="blue">Create New Ticket</Button>
           </Box>
           <Table variant="simple">
             <Thead>
@@ -39,4 +39,4 @@ function Grievance() {
       );
 }
 
-export default Grievance
+export default GrievanceStudent

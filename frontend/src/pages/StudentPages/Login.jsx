@@ -39,14 +39,14 @@ const checkAdmin = async (user) => {
       if(response.data.isAdmin){
         handleSignupSuccess(user,response.data.isAdmin)
       
-          navigate('/clinic')
+          navigate('/busManagement')
 
       }
     
       else{
         console.log("user is patient");
         handleSignupSuccess(user,response.data.isAdmin)
-        navigate('/')
+        navigate('/store')
       }
 
     }

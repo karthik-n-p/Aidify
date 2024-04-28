@@ -2,7 +2,7 @@ import { Box, Heading, Text, Input, Textarea, Button, Select, Alert, AlertIcon }
 
 import React, { useState } from 'react'
 
-function GrievanceNew() {
+function GrievanceNewTicket() {
   const [ticketType, setTicketType] = useState('');
   const [subject, setSubject] = useState('');
   const [description, setDescription] = useState('');
@@ -70,4 +70,4 @@ function GrievanceNew() {
   )
 }
 
-export default GrievanceNew
+export default GrievanceNewTicket

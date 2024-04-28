@@ -6,7 +6,6 @@ import Header from '../../components/landing-page/header'
 import Landingcards from '../../components/landing-page/Landingcards'
 
 import AuthContext from './AuthContext'
-import Profile from '../../components/landing-page/Profile'
 
 export default function Landing() {
   const { isRegistered } = React.useContext(AuthContext);
@@ -16,7 +15,7 @@ export default function Landing() {
   return (
     <Box bg={'bg'} >
 
-          {isRegistered ?<Profile/>:<Landingcards/>}
+          {<Landingcards/>}
 
      
 
