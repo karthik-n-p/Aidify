@@ -1,0 +1,52 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.6.1",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-solid-svg-icons": "^6.4.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@heroicons/react": "^2.0.18",
+    "@react-three/drei": "^9.71.0",
+    "@react-three/fiber": "^8.13.0",
+    "@types/gsap": "^3.0.0",
+    "@zegocloud/zego-uikit-prebuilt": "^1.11.0",
+    "axios": "^1.4.0",
+    "dotenv": "^16.0.3",
+    "firebase": "^9.22.0",
+    "framer-motion": "^10.12.14",
+    "moment": "^2.29.4",
+    "react": "^18.2.0",
+    "react-apexcharts": "^1.4.1",
+    "react-calendar": "^4.8.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-colorful": "^5.6.1",
+    "react-datepicker": "^4.12.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.8.0",
+    "react-redux": "^8.1.1",
+    "react-router-dom": "^6.11.1",
+    "react-time-picker": "^6.2.0",
+    "react-type-animation": "^3.0.1",
+    "scrolltrigger-classes": "^0.3.6",
+    "universal-cookie": "^4.0.4",
+    "valtio": "^1.10.5"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react": "^3.1.0",
+    "esm": "^3.2.25",
+    "http-proxy-middleware": "^2.0.6",
+    "vite": "^4.2.0"
+  }
+}
