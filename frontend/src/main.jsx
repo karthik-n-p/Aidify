@@ -33,6 +33,11 @@ import CreateDr from './pages/Clinincs/CreateDr';
 import Clinic from './pages/Clinincs/Clinic';
 import ClinicDrProfile from './pages/Clinincs/ClinicDrProfile';
 import PatientAppointment from './pages/UserPages/PatientAppointment';
+
+import Grievance from './pages/UserPages/Grievance';
+import GrievanceNew from './pages/UserPages/GrievanceNew';
+
+
 // Create a custom theme with the desired default color mode (dark)
 const customTheme = extendTheme({
   fonts: {
@@ -187,6 +192,11 @@ const App = () => {
              
             
               <Route path="/clinic" element={<ClinicDashboard />} />
+
+              <Route path="/grievance" element={<Grievance />} />
+              <Route path="/create-ticket" element={<GrievanceNew />} />
+
+
                    </Routes>
           </ChakraProvider>
         </BrowserRouter>
