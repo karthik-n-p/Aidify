@@ -1,38 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import LoginPage from './pages/UserPages/Login';
-import SignUpPage from './pages/UserPages/SignUp';
-import AuthContext from './pages/UserPages/AuthContext';
+import LoginPage from './pages/StudentPages/Login';
+import SignUpPage from './pages/StudentPages/SignUp';
+import AuthContext from './pages/StudentPages/AuthContext';
 import { doc, getDoc } from 'firebase/firestore';
-import { auth, firestore } from './pages/UserPages/firebase-auth';
+import { auth, firestore } from './pages/StudentPages/firebase-auth';
 
 
-import QuestionPage from './pages/UserPages/Upload';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'; // Import ChakraProvider and extendTheme
-import Landing from './pages/UserPages/Landing';
+import Landing from './pages/StudentPages/Landing';
 import Sidebar from './components/landing-page/Navbar';
 import Header from './components/landing-page/header';
-import PracQues from './pages/UserPages/Practice';
 
-import DoctorDashboard from './pages/AdminPages/AdminDashboard';
-import DoctorDashboard1 from './pages/AdminPages/AdminDashboard';
+import AdminDashboard from './pages/AdminPages/AdminDashboard';
 
-import Videochat from './pages/UserPages/Videochat';
-import Unauthorized from './pages/AdminPages/Unauthorized';
+
 
 import './index.css';
-import ClinicDashboard from './pages/Clinincs/Clinic';
-
-import BookSlot from './pages/UserPages/BookSlot';
 
 
-import Upload from './pages/UserPages/Upload';
 import axios from 'axios';
-import CreateDr from './pages/Clinincs/CreateDr';
-import Clinic from './pages/Clinincs/Clinic';
-import ClinicDrProfile from './pages/Clinincs/ClinicDrProfile';
-import PatientAppointment from './pages/UserPages/PatientAppointment';
+
+import AdminBusPanel from './pages/AdminPages/AdminDashboard';
+import GrevanceStudent from './pages/StudentPages/GrevanceStudent';
+import GrevanceStudentAdmin from './pages/AdminPages/GrevanceStudentAdmin';
+
 // Create a custom theme with the desired default color mode (dark)
 const customTheme = extendTheme({
   fonts: {
@@ -113,22 +106,14 @@ const App = () => {
           setIsRegistered(true);
   
           localStorage.setItem('authData', JSON.stringify({ username: user.displayName, uid: user.uid, isadmin: isAdmin }));
-          axios.post('http://localhost:3000/create-patient', {
-            username: userData.username,
-            email: user.email,
-            uid: user.uid,
-          });
+        
         }
         else{
           console.log("user data of user ",user);
           setUsername(user.displayName);
           setIsRegistered(true);
           localStorage.setItem('authData', JSON.stringify({ username: user.displayName, uid: user.uid, isadmin: isAdmin }));
-          axios.post('http://localhost:3000/create-patient', {
-            username: user.displayName,
-            email: user.email,
-            uid: user.uid,
-          });
+        
         }
       }
       }
@@ -167,26 +152,28 @@ const App = () => {
               <Header />
             </div>
             <Routes>
-          <Route path="/" element={isdoctor ? <DoctorDashboard /> :<Landing />} />
-          <Route path="/room/:roomId" element={<Videochat />} />
+              
+              <Route path='/' element={<Landing />} />
+      
               <Route path="/login" element={<LoginPage handleSignupSuccess={handleSignupSuccess} />} />
               <Route path="/signup" element={<SignUpPage handleSignupSuccess={handleSignupSuccess} />} />
+
+
+
+            {/*Bus Management*/}
+              <Route path='/busManagement' element={<AdminBusPanel />} />
        
-              <Route path="/appointment" element={<PracQues />} />
-{/*            
-              <Route path="/admin" element={isdoctor ? <DoctorDashboard /> : <Unauthorized />} /> */}
-              <Route path="/create-dr" element={<CreateDr />} />
-              <Route path="/clinic" element={<Clinic/>} />
-              <Route path='/Upload' element={<Upload />} />
-              <Route path='/doctordashboard' element={<DoctorDashboard />} />
-              <Route path='/bookslot/:name' element={<BookSlot/>}/>
 
-              <Route path="/view-doctor/:name" element={<ClinicDrProfile/>} />
 
-              <Route path='/booked-appointment/:name' element={<PatientAppointment/>} />
-             
+             {/*Grevance Management*/}
+              <Route path='/complaint/:username' element={<GrevanceStudent />} />
+              <Route path='/complaintAdmin' element={<GrevanceStudentAdmin />} />
+
+
+           
+       
             
-              <Route path="/clinic" element={<ClinicDashboard />} />
+    
                    </Routes>
           </ChakraProvider>
         </BrowserRouter>

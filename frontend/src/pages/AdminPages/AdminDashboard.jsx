@@ -33,11 +33,11 @@ import {
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import axios from "axios";
-import { auth } from "../UserPages/firebase-auth";
+import { auth } from "../StudentPages/firebase-auth";
 import { useToast } from "@chakra-ui/react";
 import {useNavigate} from "react-router-dom";
 
-const DoctorDashboard = () => {
+const AdminBusPanel = () => {
   
   const navigate = useNavigate();
   const toast = useToast();
@@ -338,4 +338,4 @@ return (
 );
 };
 
-export default DoctorDashboard;
+export default AdminBusPanel;

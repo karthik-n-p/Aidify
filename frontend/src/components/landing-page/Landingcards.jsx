@@ -2,10 +2,8 @@
 import React from 'react'
 import { Box, ButtonGroup, Container, Icon, IconButton, Link, Stack, VStack} from '@chakra-ui/react'
 import { Text,Button,Image,Flex,Card,CardHeader,CardBody,CardFooter,HStack,Heading,SimpleGrid,GridItem } from '@chakra-ui/react'
-import  LandingPic from '../../assets/human-heart.png'
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa'
 
-import Logo from '../../assets/logo.png'
+import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa'
 
 
 export default function LandingContent() {
@@ -75,7 +73,7 @@ export default function LandingContent() {
 
       <HStack  h={'100%'}  w="90vw" display={'flex'} pl={{md:'70px', base:'10px'}} gap={{md:'300px', base:'5px'}}   >
         <Text alignSelf={'flex-start'} fontSize={{md:"24px", base:"12px"}} fontWeight="thi" color="black" > Lorem ipsum dolor, sit amet   consectetur <br /> adipisicing elit. Eum ipsa doloribus <br /> nisi quo libero, quia isi dsfh </Text>
-        <Image zIndex={'100'}   position={'absolute'} right={{md:'5%',base:'0%'}}  bottom={{md:'-250px',base:'0%'}}    src={LandingPic} alt="LandingPic" w={{md:'500px',base:"260px"}} h={{md:'500px',base:"280px"}} />
+        
         <Box position="relative" alignSelf="flex-end" w="350px" h="150px">
   {/* Outer semi-circle */}
  
@@ -315,7 +313,9 @@ export default function LandingContent() {
       }}
     >
       <Stack  justify="space-between" direction="row" align="center">
-        <Image src={Logo} alt="Logo" w="60px" h="60px" />
+      <Text fontSize="lg" fontWeight="bold" color="black">
+        MediBlock
+      </Text>
         <ButtonGroup variant="tertiary">
           <IconButton  as="a" href="#" aria-label="LinkedIn" icon={<FaLinkedin size={'30px'} />} />
           <IconButton as="a" href="#" aria-label="GitHub" icon={<FaGithub size={'30px'}/>} />
