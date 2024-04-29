@@ -25,6 +25,7 @@ import axios from 'axios';
 import AdminBusPanel from './pages/AdminPages/AdminDashboard';
 import GrevanceStudent from './pages/StudentPages/GrevanceStudent';
 import GrevanceStudentAdmin from './pages/AdminPages/GrevanceStudentAdmin';
+import Store from './pages/StudentPages/Store';
 
 // Create a custom theme with the desired default color mode (dark)
 const customTheme = extendTheme({
@@ -104,6 +105,7 @@ const App = () => {
           const userData = userDoc.data();
           setUsername(userData.username);
           setIsRegistered(true);
+          
   
           localStorage.setItem('authData', JSON.stringify({ username: user.displayName, uid: user.uid, isadmin: isAdmin }));
         
@@ -168,6 +170,9 @@ const App = () => {
              {/*Grevance Management*/}
               <Route path='/complaint/:username' element={<GrevanceStudent />} />
               <Route path='/complaintAdmin' element={<GrevanceStudentAdmin />} />
+
+
+              <Route path='/store' element={<Store />} />
 
 
            
