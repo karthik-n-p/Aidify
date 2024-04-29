@@ -15,6 +15,8 @@ import Header from './components/landing-page/header';
 
 import AdminDashboard from './pages/AdminPages/AdminDashboard';
 
+import GrievanceNewTicket from './pages/StudentPages/GrievanceNewTicket'
+
 
 
 import './index.css';
@@ -25,6 +27,7 @@ import axios from 'axios';
 import AdminBusPanel from './pages/AdminPages/AdminDashboard';
 import GrevanceStudent from './pages/StudentPages/GrevanceStudent';
 import GrevanceStudentAdmin from './pages/AdminPages/GrevanceStudentAdmin';
+import Store from './pages/StudentPages/Store';
 
 // Create a custom theme with the desired default color mode (dark)
 const customTheme = extendTheme({
@@ -106,7 +109,7 @@ const App = () => {
           setIsRegistered(true);
           
   
-          localStorage.setItem('authData', JSON.stringify({ username: user.displayName, uid: user.uid, isadmin: isAdmin }));
+          localStorage.setItem('authData', JSON.stringify({ username: userData.username, uid: user.uid, isadmin: isAdmin }));
         
         }
         else{
@@ -131,6 +134,8 @@ const App = () => {
     setIsadmin(false);
 
     localStorage.removeItem('authData');
+
+    
   };
 
   return (
@@ -143,7 +148,7 @@ const App = () => {
           username: username,
           handleSignupSuccess: handleSignupSuccess,
           afterlogout: afterlogout,
-          isdoctor: isdoctor
+        
         }}
       >
         <BrowserRouter>

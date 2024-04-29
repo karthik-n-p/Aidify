@@ -22,6 +22,7 @@ export default function Dropdown({handleToggleDropdown }) {
         handleSignupSuccess(null);
         handleToggleDropdown();
         afterlogout();
+        navigate('/');
         // Additional logout actions if needed
       })
       .catch((error) => {
