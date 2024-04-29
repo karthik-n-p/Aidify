@@ -179,6 +179,8 @@ app.post('/save-product', async (req, res) => {
       sellersuid,
     });
 
+    console.log("seller ",seller);
+
     await product.save();
 
 

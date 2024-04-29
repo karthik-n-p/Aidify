@@ -20,19 +20,24 @@ import AuthContext from './AuthContext';
 import { MdFavoriteBorder } from 'react-icons/md';
 
 function Marketplace() {
-  const uid = auth.currentUser.uid;
-  const { username } = useContext(AuthContext);
+  const uid = localStorage.getItem('uid');
+  const { username } = useContext(AuthContext); // Get username from the AuthContext
+
+  console.log('username in store', username)
   const [products, setProducts] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     price: '',
     meetingPoint: '',
+    seller: username,
     email: '',
     image: '',
     sellersuid: uid,
-    seller: username
+    
   });
+
+
   const [showAddProductForm, setShowAddProductForm] = useState(false);
 
   useEffect(() => {
@@ -55,6 +60,7 @@ function Marketplace() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log('Form data:', formData);
       await axios.post('http://localhost:3000/save-product', formData);
       setFormData({
         title: '',
@@ -162,9 +168,7 @@ function Marketplace() {
                 <Text fontSize="sm">Meeting Point: {product.meetingPoint}</Text>
                 <Text fontSize="sm">Email: {product.email}</Text>
                 <Button onClick={() => handleBookProduct(product._id)} colorScheme="teal" mt={2}>Book</Button>
-                <Button onClick={() => handleAddToWishlist(product._id)} colorScheme="pink" mt={2}>
-                  <MdFavoriteBorder /> {/* Love icon */}
-                </Button>
+             
               </Box>
             </GridItem>
           ))}
