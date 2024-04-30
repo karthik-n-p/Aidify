@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Button, FormControl, FormLabel, Select, Heading } from '@chakra-ui/react';
 
+import { Link } from 'react-router-dom';
+
+
 function Bus() {
 
   const [bus, setBus] = useState('');
@@ -73,7 +76,7 @@ function Bus() {
         </FormControl>
       )}
 
-      <Button mt={4} colorScheme="blue" onClick={handleBook} disabled={!location || !time || !route}>Book Bus</Button>
+      <Button as={Link} to="/bookseat/null" mt={4} colorScheme="blue" onClick={handleBook} disabled={!location || !time || !route}>Book Bus</Button>
     </Box>
   );
 }
