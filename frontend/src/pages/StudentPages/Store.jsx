@@ -14,31 +14,42 @@ import {
   Select,
   Spacer,
   HStack,
+  useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalCloseButton,
 } from '@chakra-ui/react';
 import { auth } from './firebase-auth';
 import AuthContext from './AuthContext';
 import { MdFavoriteBorder } from 'react-icons/md';
 
 function Marketplace() {
-  const uid = localStorage.getItem('uid');
-  const { username } = useContext(AuthContext); // Get username from the AuthContext
+  const toast = useToast(); // Initialize useToast hook
+  const [viewingMyProducts, setViewingMyProducts] = useState(false);
+  const userdata = localStorage.getItem('authData');
 
-  console.log('username in store', username)
+  const seller = JSON.parse(userdata).username;
+  const sellersuid = JSON.parse(userdata).uid;
+  console.log('uid', sellersuid);
+  console.log('username', seller);
+
   const [products, setProducts] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     price: '',
     meetingPoint: '',
-    seller: username,
     email: '',
     image: '',
-    sellersuid: uid,
-    
   });
 
-
   const [showAddProductForm, setShowAddProductForm] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     fetchProducts();
@@ -47,7 +58,15 @@ function Marketplace() {
   const fetchProducts = async () => {
     try {
       const response = await axios.get('http://localhost:3000/products');
-      setProducts(response.data);
+      const data = response.data;
+      const filteredData = viewingMyProducts
+        ? data.filter((product) => product.sellersuid === sellersuid)
+        : data.filter((product) => product.sellersuid !== sellersuid);
+
+      // Filter out the products that are not sold
+      const filteredData2 = filteredData.filter((product) => product.status !== 'sold');
+
+      setProducts(filteredData2);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
@@ -60,20 +79,23 @@ function Marketplace() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log('Form data:', formData);
-      await axios.post('http://localhost:3000/save-product', formData);
-      setFormData({
-        title: '',
-        description: '',
-        price: '',
-        meetingPoint: '',
-        email: '',
-        image: '',
-        sellersuid: uid,
-        seller: username
+      const formDataWithSeller = {
+        ...formData,
+        seller: seller,
+        sellersuid: sellersuid,
+      };
+      console.log('Form data with seller:', formDataWithSeller);
+      await axios.post('http://localhost:3000/save-product', formDataWithSeller);
+      fetchProducts();
+      setShowAddProductForm(false);
+
+      toast({
+        title: 'Product added successfully',
+        description: 'You can see your product in My Products',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
       });
-      fetchProducts(); // Refresh product list after adding a new product
-      setShowAddProductForm(false); // Hide add product form after submission
     } catch (error) {
       console.error('Error adding product:', error);
     }
@@ -93,17 +115,65 @@ function Marketplace() {
 
   const handleSort = async (sortBy) => {
     try {
-      const response = await axios.get(`http://localhost:3000/products?sort=${sortBy}`);
-      setProducts(response.data);
+      console.log('sortBy', sortBy);
+      const response = await axios.get(`http://localhost:3000/products`);
+      if(sortBy === 'price') {
+        const sortedProducts = response.data.sort((a, b) => a.price - b.price);
+        setProducts(sortedProducts);
+      }
+      else {
+        const sortedProducts = response.data.sort((a, b) => b.price - a.price);
+        setProducts(sortedProducts);
+      }
+      console.log('sortedProducts', products);
+
+
+      
+      
     } catch (error) {
       console.error('Error sorting products:', error);
     }
   };
 
+  const handleToggleView = async () => {
+    setViewingMyProducts(!viewingMyProducts);
+
+    try {
+      const response = await axios.get('http://localhost:3000/products');
+      const data = response.data;
+
+      const filteredData = data.filter((product) => product.sellersuid !== sellersuid && product.status !== 'sold');
+
+
+
+      setProducts(filteredData);
+      console.log('filteredData', products);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
+
+  const handleMyProduct = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/products');
+      const data = response.data;
+      const filteredData = data.filter((product) => product.sellersuid === sellersuid);
+      setProducts(filteredData);
+    
+      setViewingMyProducts(true);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
+
   const handleBookProduct = async (productId) => {
     try {
-      await axios.post('http://localhost:3000/book-product', { productId, buyer: uid });
-      fetchProducts(); // Refresh product list after booking
+      await axios.post('http://localhost:3000/book-product', { productId, buyer: sellersuid });
+      fetchProducts();
+      setShowModal(true);
+      setSelectedProduct(products.find((product) => product._id === productId));
+
+     
     } catch (error) {
       console.error('Error booking product:', error);
     }
@@ -117,18 +187,51 @@ function Marketplace() {
     setShowAddProductForm(!showAddProductForm);
   };
 
+  const handleModalClose = () => {
+    setShowModal(false);
+    setSelectedProduct(null);
+  };
+
+  const handleModalConfirm = () => {
+    // Here you can implement sending an email or any other action upon confirmation
+    setShowModal(false);
+    setSelectedProduct(null);
+  };
+
+  const handleRevert = async (productId) => {
+    console.log('productId', productId);
+    try {
+      await axios.put('http://localhost:3000/revert-product', {productId: productId});
+      fetchProducts();
+    } catch (error) {
+      console.error('Error reverting product:', error);
+    }
+  };
+
+
+
+  console.log('showmyproducts', viewingMyProducts);
+
   return (
-    <VStack spacing={8} align="flex-start" p={8}>
+    <VStack spacing={8} align="flex-start" p="20px 120px">
       <HStack justify="space-between" w="100%">
-        <Heading as="h1" size="xl">Marketplace</Heading>
+        <Heading as="h1" size="xl">
+          Marketplace
+        </Heading>
         <HStack>
-          <Button colorScheme="teal" leftIcon={<MdFavoriteBorder />}>My Products</Button>
+          <Button onClick={viewingMyProducts ? handleToggleView : handleMyProduct} colorScheme="teal" leftIcon={<MdFavoriteBorder />}>
+            {viewingMyProducts ? 'See All products' : 'See My Products'}
+          </Button>
           <Spacer />
-          <Button colorScheme="blue" onClick={handleToggleAddProductForm}>Add Product</Button>
+          <Button colorScheme="blue" onClick={handleToggleAddProductForm}>
+            Add Product
+          </Button>
         </HStack>
       </HStack>
       <Box w="100%">
-        <Heading as="h2" size="lg">Add New Product</Heading>
+        <Heading as="h2" size="lg">
+          Add New Product
+        </Heading>
         {showAddProductForm && (
           <form onSubmit={handleSubmit}>
             <VStack spacing={3} align="flex-start">
@@ -136,7 +239,7 @@ function Marketplace() {
               <Textarea name="description" value={formData.description} onChange={handleInputChange} placeholder="Description" />
               <Input type="text" name="price" value={formData.price} onChange={handleInputChange} placeholder="Price" />
               <Input type="text" name="meetingPoint" value={formData.meetingPoint} onChange={handleInputChange} placeholder="Meeting Point" />
-              <Input type="email" name="email" value={formData.email} onChange={handleInputChange} placeholder="Email" />
+              <Input type="tel" name="email" value={formData.email} onChange={handleInputChange} placeholder="PhoneNumber" />
               <Input type="text" name="image" value={formData.image} onChange={handleInputChange} placeholder="Image URL" />
               <Button type="submit">Add Product</Button>
             </VStack>
@@ -155,26 +258,71 @@ function Marketplace() {
             <option value="-price">Price (High to Low)</option>
           </Select>
         </Box>
-        
         <Grid templateColumns="repeat(3, 1fr)" gap={6}>
           {products.length === 0 && <Text>No products found</Text>}
           {products.map((product) => (
             <GridItem key={product._id}>
               <Box p={4} borderWidth="1px" borderRadius="md" boxShadow="md">
-                <Image src={product.image} alt={product.title} borderRadius="md" />
-                <Text mt={2} fontWeight="semibold">{product.title}</Text>
-                <Text fontSize="sm" color="gray.600">{product.description}</Text>
+                <Image w={'270px'} h={'250px'} src={product.image} alt={product.title} borderRadius="md" />
+                <Text mt={2} fontWeight="semibold">
+                  {product.title}
+                </Text>
+                <Text fontSize="sm" color="gray.600">
+                  {product.description}
+                </Text>
                 <Text fontSize="sm">Price: ${product.price}</Text>
                 <Text fontSize="sm">Meeting Point: {product.meetingPoint}</Text>
                 <Text fontSize="sm">Email: {product.email}</Text>
-                <Button onClick={() => handleBookProduct(product._id)} colorScheme="teal" mt={2}>Book</Button>
-             
+                {!viewingMyProducts && (
+                  <Button onClick={() => handleBookProduct(product._id)} colorScheme="teal" mt={2}>
+                    Book Product
+                  </Button>
+                )}
+                {viewingMyProducts && (
+                  <>
+                  <Text fontSize="sm" color="gray.600">
+                    Status: {product.status}
+                  </Text>
+                  {product.status == 'sold' && (
+                    <>
+                    <Button onClick={() => handleRevert(product._id)} colorScheme="teal" mt={2}> 
+
+                    Revert to Available
+                    </Button>
+                    <Text color="red" fontSize="sm" >
+                    If the product is not sold, you can revert it to available
+                    </Text>
+                    </>
+                  )
+                    }
+                 
+                  </>
+                )}
               </Box>
             </GridItem>
           ))}
         </Grid>
       </Box>
-      
+      <Modal  isOpen={showModal} onClose={handleModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Booking is confired</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+       
+            <Text>
+              You can contact the seller at {selectedProduct && selectedProduct.email} and meet at{' '}
+              {selectedProduct && selectedProduct.meetingPoint}.
+            </Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={handleModalConfirm}>
+              OK
+            </Button>
+           
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </VStack>
   );
 }
