@@ -331,6 +331,42 @@ app.delete('/delete-product/:productId', async (req, res) => {
 
 );
 
+//endpoint to revert the status of the product to available
+
+app.put('/revert-product', async (req, res) => {
+  try {
+    const { productId } = req.body;
+    console.log("productId",productId);
+
+    const product = await Product .findOne({ _id: productId });
+
+    console.log("product",product);
+
+    if (!product) {
+      return res.status(404).json({ success: false, error: 'Product not found' });
+    }
+
+    product.status = 'available';
+
+    product.buyer = '';
+
+    await product.save();
+
+    res.status(200).json({ success: true });
+
+  } catch (error) {
+    console.error('Error updating product:', error);
+
+    res.status(500).json({ success: false, error: 'Failed to update product' });
+
+  }
+
+}
+
+);
+
+
+
 //Endpoint to book a product
 
 app.post('/book-product', async (req, res) => {

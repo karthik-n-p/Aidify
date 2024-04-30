@@ -91,32 +91,21 @@ const App = () => {
   
       if (user) {
         // Check if the user's email contains a specific domain associated with doctors
-        if (user.email.includes('@med.com')) {
-          console.log('User is a doctor');
-          setIsdoctor(true);
-          setIsRegistered(true);
-            setUsername( user.displayName);
-            setIsRegistered(true);
-            console.log("user data of doctor ",user);
+        
     
-            localStorage.setItem('authData', JSON.stringify({ username: user.displayName , isdoctor: isdoctor, isadmin: isAdmin}));
-       
-   
-        }
-        else{
-          setIsdoctor(false);
-          
         const userDoc = await getDoc(doc(firestore, 'username', user.uid));
         if (userDoc.exists()) {
           const userData = userDoc.data();
           setUsername(userData.username);
           console.log(userData.username,"bb")
           setIsRegistered(true);
-          setuid(user.uid)
-          console.log("userid ",user.uid)
+
+          console.log("user data  ",user);
           
   
           localStorage.setItem('authData', JSON.stringify({ username: userData.username, uid: user.uid, isadmin: isAdmin }));
+
+          //now to retrive local storage data we can use localStorage.getItem('authData')
         
         }
         else{
@@ -126,7 +115,7 @@ const App = () => {
           localStorage.setItem('authData', JSON.stringify({ username: user.displayName, uid: user.uid, isadmin: isAdmin }));
         
         }
-      }
+      
       }
     } catch (error) {
       setIsRegistered(false);
