@@ -50,7 +50,7 @@ const Sidebar = () => {
       }
         
        
-        <Link to={isadmin?'/busManagement' :'/appointment'}>
+        <Link to={isadmin?'/busManagement' :'/bus'}>
         <HStack spacing="20px" p="" onClick={() => handleIconClick("Practice")}>
           <Box  width="60px" height="60px" borderRadius="40px" border='5px solid white'  display="flex" justifyContent="center" alignItems="center"  name='home'  bg={highlightedIcon === "Practice" ? "btng" : "bg"} >
             {isadmin? <FaBus  color={highlightedIcon === "Practice" ? "white" : "black"} size="30px" /> : <FaBus color={highlightedIcon === "Practice" ? "white" : "black"} size="30px" />}
@@ -65,7 +65,7 @@ const Sidebar = () => {
 
        
        
-        <Link to={`/complaint/${username}`}>
+        <Link to={isadmin?'/complaintAdmin' :`/complaint/${username}`}>
         <HStack spacing="20px" p="" onClick={() => handleIconClick("Resources")}>
           <Box  width="60px" height="60px" borderRadius="40px" border='5px solid white'  name='Resources'  bg={highlightedIcon === "Resources" ? "btng" : "bg"}   display="flex" justifyContent="center" alignItems="center">
             <MdFeedback color={highlightedIcon === "Resources" ? "white" : "black"} size="30px" />

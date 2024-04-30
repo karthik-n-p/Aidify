@@ -36,6 +36,7 @@ mongoose.connect(process.env.MONGODB_URI,)
   .catch(err => logger.error('MongoDB connection error:', err));
 
 
+
 const openaiapi = process.env.OPENAI_API_KEY
 console.log(openaiapi);
 

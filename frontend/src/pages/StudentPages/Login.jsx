@@ -136,13 +136,13 @@ const checkAdmin = async (user) => {
 
   return (
     <>
-      <Box bg={'bg'} display="flex" flexDirection="column" gap="150px">
+      <Box bg={'bg'} display="flex" flexDirection="column" gap="50px">
         <Box
           w="800px"
           height="100%"
           position="relative"
-          top="60px"
-          left="400px"
+          top="1px"
+          left="20%"
           display="flex"
           flexDirection="row"
         >
@@ -150,16 +150,7 @@ const checkAdmin = async (user) => {
             <Heading fontStyle="normal" fontWeight="bold" fontSize="5xl" p="40px 65px 35px 0px">
               Log In
             </Heading>
-            <Select
-              placeholder="Select User Type"
-              value={userType}
-              onChange={(e) => setUserType(e.target.value)}
-              mb={4}
-            >
-              <option value="clinic">Clinic</option>
-              <option value="doctor">Doctor</option>
-              <option value="patient">Patient</option>
-            </Select>
+          
             <Box display={'flex'} alignItems={'center'} justifyContent={'space-evenly'}  w="250px" h="45px" border={'3px solid white'} borderRadius="4px" cursor={'pointer'} onClick={handleGoogleSignIn}>
                     <FaGoogle size="25px"  />
                     <Text color="black" fontSize="md" lineHeight={"18px"} bg={''}>
@@ -173,9 +164,8 @@ const checkAdmin = async (user) => {
               How social log in works
             </Text>
             <Text w="300px" h="130px" color="txtg" fontSize="sm">
-              If the email address associated with your social account matches the email address of your CodeSpace
-              account, you'll be Signed Up. You aren't locked to any particular social account. Questions? contact
-              support.
+              If the email address associated with your social account matches the email address of your Aidify
+              account, you'll be Signed Up. You aren't locked to any particular social account.
             </Text>
           </Flex>
           <Box mt="100px" ml="55px" display="flex" flexDirection="column" alignItems="center" justifyContent="center">
@@ -215,7 +205,7 @@ const checkAdmin = async (user) => {
           </Flex>
         </Box>
         <Link to='/signup'>
-        <Text textAlign="center" ml="250px" mt="55px" fontSize="sm" color="#76DAFF">
+        <Text textAlign="center" ml="25px" fontSize="sm" color="#76DAFF">
           
           Don't have an account? <Text as="u" color="#76DAFF">Sign Up</Text>
         </Text>

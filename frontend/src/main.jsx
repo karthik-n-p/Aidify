@@ -15,7 +15,6 @@ import Header from './components/landing-page/header';
 
 import AdminDashboard from './pages/AdminPages/AdminDashboard';
 
-import GrievanceNewTicket from './pages/StudentPages/GrievanceNewTicket'
 
 
 
@@ -25,9 +24,12 @@ import './index.css';
 import axios from 'axios';
 
 import AdminBusPanel from './pages/AdminPages/AdminDashboard';
-import GrevanceStudent from './pages/StudentPages/GrevanceStudent';
 import GrevanceStudentAdmin from './pages/AdminPages/GrevanceStudentAdmin';
 import Store from './pages/StudentPages/Store';
+import GrievanceStudent from './pages/StudentPages/GrevanceStudent';
+import GrievanceNewTicket from './pages/StudentPages/GrievanceNewTicket';
+import Marketplace from './pages/StudentPages/Store'; 
+import Bus from './pages/StudentPages/Bus';
 
 // Create a custom theme with the desired default color mode (dark)
 const customTheme = extendTheme({
@@ -57,6 +59,7 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [isadmin, setIsadmin] = useState(false);
   const [isdoctor, setIsdoctor] = useState(false);
+  const [uid ,setuid] =useState('')
 
 
   
@@ -93,6 +96,7 @@ const App = () => {
         if (userDoc.exists()) {
           const userData = userDoc.data();
           setUsername(userData.username);
+          console.log(userData.username,"bb")
           setIsRegistered(true);
 
           console.log("user data  ",user);
@@ -139,6 +143,7 @@ const App = () => {
           username: username,
           handleSignupSuccess: handleSignupSuccess,
           afterlogout: afterlogout,
+          uid: uid,
         
         }}
       >
@@ -159,16 +164,19 @@ const App = () => {
 
             {/*Bus Management*/}
               <Route path='/busManagement' element={<AdminBusPanel />} />
+              <Route path='/bus' element={<Bus />} />
+
        
 
 
              {/*Grevance Management*/}
-              <Route path='/complaint/:username' element={<GrevanceStudent />} />
+              <Route path='/complaint/:username' element={<GrievanceStudent />} />
               <Route path='/create-ticket/:username' element={<GrievanceNewTicket />} />
+
               <Route path='/complaintAdmin' element={<GrevanceStudentAdmin />} />
 
 
-              <Route path='/store' element={<Store />} />
+              <Route path='/store' element={<Marketplace />} />
 
 
            
