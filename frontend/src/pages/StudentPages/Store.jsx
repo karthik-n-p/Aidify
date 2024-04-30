@@ -25,7 +25,7 @@ import {
 } from '@chakra-ui/react';
 import { auth } from './firebase-auth';
 import AuthContext from './AuthContext';
-import { MdFavoriteBorder } from 'react-icons/md';
+import { MdDelete, MdEdit, MdFavoriteBorder } from 'react-icons/md';
 
 function Marketplace() {
   const toast = useToast(); // Initialize useToast hook
@@ -50,6 +50,10 @@ function Marketplace() {
   const [showAddProductForm, setShowAddProductForm] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+
+
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [productId, setProductId] = useState('');
 
   useEffect(() => {
     fetchProducts();
@@ -208,6 +212,66 @@ function Marketplace() {
     }
   };
 
+  const handleRemove = async (productId) => {
+    try {
+      await axios.delete(`http://localhost:3000/delete-product/${productId}`);
+
+      fetchProducts();
+
+      toast({
+        title: 'Product removed successfully',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error('Error removing product:', error);
+    }
+  };
+
+  const handleedit = async (productId) => {
+    console.log('productId', productId);
+    const product = products.find((product) => product._id === productId);
+    console.log('product', product);
+    setFormData({
+      title: product.title,
+      description: product.description,
+      price: product.price,
+      meetingPoint: product.meetingPoint,
+      email: product.email,
+      image: product.image,
+    });
+    setShowEditModal(true);
+    setProductId(productId);
+  };
+
+  const handleEditModalClose = () => {
+    setShowEditModal(false);
+  };
+
+
+  const handleEditSubmit = async () => {
+    try {
+      const formDataWithSeller = {
+        ...formData,
+        seller: seller,
+        sellersuid: sellersuid,
+      };
+      await axios.put(`http://localhost:3000/update-product/${productId}`, formDataWithSeller);
+      setShowEditModal(false);
+      toast({
+        title: 'Product edited successfully',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (error) {
+      console.error('Error editing product:', error);
+    }
+  };
+
+
+
 
 
   console.log('showmyproducts', viewingMyProducts);
@@ -283,8 +347,15 @@ function Marketplace() {
                   <Text fontSize="sm" color="gray.600">
                     Status: {product.status}
                   </Text>
+                  <Button mr={'20px'} onClick={() => handleRemove(product._id)} colorScheme="red" mt={2}>
+                    <MdDelete />
+                  </Button>
+                  <Button mr={'20px'} onClick={() => handleedit(product._id)} colorScheme="blue" mt={2}>
+                    <MdEdit />
+                  </Button>
                   {product.status == 'sold' && (
                     <>
+                    
                     <Button onClick={() => handleRevert(product._id)} colorScheme="teal" mt={2}> 
 
                     Revert to Available
@@ -299,9 +370,34 @@ function Marketplace() {
                   </>
                 )}
               </Box>
+
+              
             </GridItem>
           ))}
         </Grid>
+
+        {/* create a model for taking input for editing the product */}
+        <Modal isOpen={showEditModal} onClose={handleEditModalClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit Product</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack spacing={3} align="flex-start">
+              <Input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="Title" />
+              <Textarea name="description" value={formData.description} onChange={handleInputChange} placeholder="Description" />
+              <Input type="text" name="price" value={formData.price} onChange={handleInputChange} placeholder="Price" />
+              <Input type="text" name="meetingPoint" value={formData.meetingPoint} onChange={handleInputChange} placeholder="Meeting Point" />
+              <Input type="tel" name="email" value={formData.email} onChange={handleInputChange} placeholder="PhoneNumber" />
+              <Input type="text" name="image" value={formData.image} onChange={handleInputChange} placeholder="Image URL" />
+              <Button onClick={handleEditSubmit}>Edit Product</Button>
+            </VStack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+
+
+
       </Box>
       <Modal  isOpen={showModal} onClose={handleModalClose}>
         <ModalOverlay />
