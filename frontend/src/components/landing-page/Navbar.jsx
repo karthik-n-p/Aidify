@@ -65,7 +65,7 @@ const Sidebar = () => {
 
        
        
-        <Link to={`/complaint/${username}`}>
+        <Link to={isadmin?'/complaintAdmin' :`/complaint/${username}`}>
         <HStack spacing="20px" p="" onClick={() => handleIconClick("Resources")}>
           <Box  width="60px" height="60px" borderRadius="40px" border='5px solid white'  name='Resources'  bg={highlightedIcon === "Resources" ? "btng" : "bg"}   display="flex" justifyContent="center" alignItems="center">
             <MdFeedback color={highlightedIcon === "Resources" ? "white" : "black"} size="30px" />

@@ -20,20 +20,21 @@ import AuthContext from './AuthContext';
 import { MdFavoriteBorder } from 'react-icons/md';
 
 function Marketplace() {
-  const uid = localStorage.getItem('uid');
-  const { username } = useContext(AuthContext); // Get username from the AuthContext
+  const {username} = useContext(AuthContext); // Get username from the AuthContext
+  const {uid} = useContext(AuthContext);
+  console.log("uid",uid,"username",username)
 
-  console.log('username in store', username)
   const [products, setProducts] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     price: '',
     meetingPoint: '',
-    seller: username,
+    seller: {username},
     email: '',
-    image: '',
-    sellersuid: uid,
+    sellersuid: {uid},
+    image: ''
+    
     
   });
 
@@ -118,7 +119,7 @@ function Marketplace() {
   };
 
   return (
-    <VStack spacing={8} align="flex-start" p={8}>
+    <VStack spacing={8} align="flex-start" p={8} ml="10%" width="80%">
       <HStack justify="space-between" w="100%">
         <Heading as="h1" size="xl">Marketplace</Heading>
         <HStack>
@@ -128,7 +129,7 @@ function Marketplace() {
         </HStack>
       </HStack>
       <Box w="100%">
-        <Heading as="h2" size="lg">Add New Product</Heading>
+        <Heading as="h2" size="lg" mb="30px">Add New Product</Heading>
         {showAddProductForm && (
           <form onSubmit={handleSubmit}>
             <VStack spacing={3} align="flex-start">

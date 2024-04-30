@@ -33,16 +33,14 @@ const Header = () => {
       <Flex align="center" justifyContent={'space-between'}  width="100%">
         {/* Logo */}
         <Flex w={'70px'} h={'70px'}  alignItems={'center'} justifyContent={'center'} borderRadius={'50%'}    bg={'white'}>
-         <Text fontSize={'30px'} color={'btng'}>M</Text>
+         <Text fontSize={'30px'} color={'btng'}>A</Text>
          
         </Flex>
 
         <Flex ml={'20px'} borderRadius={'20px'} fontStyle={'bold'} px="4" py="2"  textAlign={'center'} border={'3px solid white'}>
-          MediBlock
+          AIDIFY
         </Flex>
-        <Flex borderRadius={'20px'} fontStyle={'bold'} px="4" py="2"  textAlign={'center'} border={'3px solid white'}>
-          We Care 
-        </Flex>
+        
 
         {/* Search bar */}
        
@@ -52,7 +50,7 @@ const Header = () => {
           <>
             
 
-            <Flex alignItems="center" gap="5px"  onClick={handleToggleDropdown} cursor={'pointer'}>
+            <Flex alignItems="center" gap="5px" mr="100px" onClick={handleToggleDropdown} cursor={'pointer'}>
               {isRegistered &&
               <IconButton
                 icon={<FaUser size="25px" />}
@@ -81,7 +79,7 @@ const Header = () => {
                   >
                     {username}
                   </Text>
-                  <FaChevronDown size="15px" color="#808191" />
+                  <FaChevronDown size="15px" color="black" />
            
                  
                 </Flex>
@@ -92,21 +90,7 @@ const Header = () => {
 
           </>
         )}
-               {isRegistered ? (
-              <IconButton
-
-                icon={<FaBell size="25px" />}
-                w="45px"
-                h="45px"
-                borderRadius="100px"
-                color="btng"
-                bg="white"
-                size="md"
-                mx={'30px'}
-              />
-            ) : (
-              <></>
-            )}
+            
              {isDropdownOpen && <ProfileSection  handleToggleDropdown={handleToggleDropdown}/>}
           
         <Box>

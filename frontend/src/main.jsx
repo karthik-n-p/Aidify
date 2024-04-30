@@ -15,7 +15,6 @@ import Header from './components/landing-page/header';
 
 import AdminDashboard from './pages/AdminPages/AdminDashboard';
 
-import GrievanceNewTicket from './pages/StudentPages/GrievanceNewTicket'
 
 
 
@@ -59,6 +58,7 @@ const App = () => {
   const [username, setUsername] = useState('');
   const [isadmin, setIsadmin] = useState(false);
   const [isdoctor, setIsdoctor] = useState(false);
+  const [uid ,setuid] =useState('')
 
 
   
@@ -110,6 +110,8 @@ const App = () => {
           setUsername(userData.username);
           console.log(userData.username,"bb")
           setIsRegistered(true);
+          setuid(user.uid)
+          console.log("userid ",user.uid)
           
   
           localStorage.setItem('authData', JSON.stringify({ username: userData.username, uid: user.uid, isadmin: isAdmin }));
@@ -151,6 +153,7 @@ const App = () => {
           username: username,
           handleSignupSuccess: handleSignupSuccess,
           afterlogout: afterlogout,
+          uid: uid,
         
         }}
       >
