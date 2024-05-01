@@ -23,7 +23,7 @@ function SeatSelection() {
     // Simulating API call delay
     setTimeout(() => {
       // Dummy data for booked seats
-      const bookedSeatsData = ["A1", "A3", "B2", "C4"];
+      const bookedSeatsData = ["1"];
       setBookedSeats(bookedSeatsData);
     }, 1000);
   };
@@ -35,31 +35,28 @@ function SeatSelection() {
 
   // Function to render seat grid
   const renderSeatGrid = () => {
-    const rows = ['A', 'B', 'C', 'D', 'E'];
-    const cols = [1, 2, 3, 4, 5, 6, 7];
+
+    const totalRows = 5;
+    const totalColumns = 10;
+    const totalSeats = totalRows * totalColumns;
+    const seats = Array.from({ length: totalSeats }, (_, index) => index + 1);
 
     return (
-      <Grid templateColumns="repeat(7, 1fr)" gap={4}>
-        {rows.map(row => {
-          return cols.map(col => {
-            const seat = `${row}${col}`;
-            const isBooked = bookedSeats.includes(seat);
-            const isSelected = selectedSeat === seat;
-            return (
-              <Button
-                key={seat}
-                onClick={() => handleSeatSelection(seat)}
-                bg={isBooked ? "gray.300" : isSelected ? "blue.500" : "gray.100"}
-                color={isBooked ? "gray.600" : isSelected ? "white" : "gray.800"}
-                disabled={isBooked}
-                _hover={!isBooked && { bg: isSelected ? "blue.600" : "gray.200" }}
-                cursor={isBooked ? "not-allowed" : "pointer"}
-              >
-                {seat}
-              </Button>
-            );
-          });
-        })}
+      <Grid templateColumns={`repeat(${totalColumns}, 1fr)`} gap={1}>
+        {seats.map(seatNumber => (
+          <Button
+            key={seatNumber}
+            onClick={() => handleSeatSelection(seatNumber.toString())}
+            width="20px"
+            bg={bookedSeats.includes(seatNumber.toString()) ? "gray.300" : selectedSeat === seatNumber.toString() ? "blue.500" : "gray.100"}
+            color={bookedSeats.includes(seatNumber.toString()) ? "gray.600" : selectedSeat === seatNumber.toString() ? "white" : "gray.800"}
+            disabled={bookedSeats.includes(seatNumber.toString())}
+            _hover={!bookedSeats.includes(seatNumber.toString()) && { bg: selectedSeat === seatNumber.toString() ? "blue.600" : "gray.200" }}
+            cursor={bookedSeats.includes(seatNumber.toString()) ? "not-allowed" : "pointer"}
+          >
+            {seatNumber}
+          </Button>
+        ))}
       </Grid>
     );
   };
@@ -70,9 +67,8 @@ function SeatSelection() {
       <Box border="1px solid #ccc" borderRadius="md" p={4}>
         {renderSeatGrid()}
       </Box>
-      <Box mb={2}>
-        <Text fontSize="md" fontWeight="bold">Selected Seat: {selectedSeat || "-"}</Text>
-        <Text fontSize="md" fontWeight="bold">Booked Seats: {bookedSeats.join(', ')}</Text>
+      <Box mb={2} mt={4}>
+        <Text fontSize="md" fontWeight="bold">Selected Seat No: {selectedSeat || "-"}</Text>
       </Box>
       <Button mt={4} colorScheme="blue" onClick={() => console.log("Selected seat:", selectedSeat)}>Confirm Seat</Button>
     </Box>

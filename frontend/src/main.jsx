@@ -32,6 +32,7 @@ import Marketplace from './pages/StudentPages/Store';
 import Bus from './pages/StudentPages/Bus';
 import BookSeat from './pages/StudentPages/BookSeat';
 
+
 // Create a custom theme with the desired default color mode (dark)
 const customTheme = extendTheme({
   fonts: {
@@ -180,11 +181,7 @@ const App = () => {
 
 
               <Route path='/store' element={<Marketplace />} />
-
-
-           
-       
-            
+    
     
                    </Routes>
           </ChakraProvider>
