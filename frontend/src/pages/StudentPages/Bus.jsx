@@ -92,7 +92,7 @@ function Bus() {
 
   const handleDownloadImage = () => {
     const link = document.createElement('a');
-    link.href = `https://via.placeholder.com/300?text=Seat+${selectedSeat.seatNo}+on+Bus+No/Name+${selectedBus.busNo}+Booked+by+${localStorage.getItem('email')}`;
+    link.href = `https://via.placeholder.com/300?text=Seat+${selectedSeat.seatNo}+on+Bus+No/Name+${selectedBus.busNo}+Booked+by+Thu`;
     link.download = 'bus_ticket.png';
     document.body.appendChild(link);
     link.click();
