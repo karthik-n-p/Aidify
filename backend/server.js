@@ -664,6 +664,434 @@ app.put('/respond-grievance/:grievanceId', async (req, res) => {
 
 
 
+const Bus = require('./models/Bus');
+
+// Endpoint to save users with bus pass
+app.post('/bus-add-user', async (req, res) => {
+  try {
+    const { email, validity } = req.body;
+
+    // Find the existing bus document
+    const bus = await Bus.findOne();
+
+    // If no bus document exists, create a new one with the user
+    if (!bus) {
+      const newBus = new Bus({
+        users: [{ email, validity }]
+      });
+      await newBus.save();
+    } else {
+      // If bus document exists, push the new user into the existing users array
+      bus.users.push({ email, validity });
+      await bus.save();
+    }
+
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Error saving user details:', error);
+    res.status(500).json({ success: false, error: 'Failed to save user details' });
+  }
+});
+
+
+//fetch registered users with bus pass
+
+app.get('/bus-users', async (req, res) => {
+  try {
+    const bus = await Bus.find();
+
+    const users = bus.map(bus => bus.users).flat();
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+}
+);
+
+
+//endpoint to delete a specific user automatically when the validity of the bus pass is expired
+
+app.delete('/delete-user', async (req, res) => {
+
+  try {
+
+    const bus = await Bus.findOne();
+
+    // Select users array from the bus document
+
+    bus.users = bus.users.filter(user => {
+      // Check if the user's validity is expired
+      const currentDate = new Date();
+      const validityDate = new Date(user.validity);
+
+      return currentDate.getTime() < validityDate.getTime();
+    }
+    );
+
+    await bus.save();
+
+    res.status(200).json({ success: true });
+
+  } catch (error) {
+      
+      console.error('Error deleting user:', error);
+  
+      res.status(500).json({ success: false, error: 'Failed to delete user' });
+  
+    }
+
+}
+
+);
+
+
+//END POINT TO BOOK A SEAT IN THE BUS
+
+app.post('/book-seat', async (req, res) => {
+
+  try {
+    const { busId, seatNo, email } = req.body;
+    console.log("busId",busId, "seatNo",seatNo, "email",email);
+
+    const bus = await Bus.findOne();
+
+    // Select busdetails array from the bus document and update the seat with the busId
+
+    bus.busDetails = bus.busDetails.map(bus => {
+
+      if (bus._id == busId) {
+
+        // Select seats array from the bus details
+
+        bus.seats = bus.seats.map(seat => {
+
+          if (seat.seatNo == seatNo) {
+
+            seat.isBooked = true;
+
+            seat.bookedBy = email;
+
+          }
+
+          return seat;
+
+        });
+
+      }
+
+      return bus;
+
+    });
+
+    await bus.save();
+
+    res.status(200).json({ success: true });
+
+  } catch (error) {
+
+    console.error('Error booking seat:', error);
+
+    res.status(500).json({ success: false, error: 'Failed to book seat' });
+
+  }
+
+}
+
+);
+
+
+//END POINT TO refresh booked seats in the bus when a day is passed
+
+app.put('/refresh-seats', async (req, res) => {
+
+  try {
+
+    const bus = await Bus.findOne();
+
+    //refresh the booked seats in the bus when a day is passed to false and bookedBy to null at 6: 38 pm
+
+     const currentDate = new Date();
+
+
+    if (currentDate.getHours() == 0 && currentDate.getMinutes() == 0 && currentDate.getSeconds() == 0) {
+
+      bus.busDetails = bus.busDetails.map(bus => {
+
+        bus.seats = bus.seats.map(seat => {
+
+          seat.isBooked = false;
+
+          seat.bookedBy = null;
+
+          return seat;
+
+        });
+
+        return bus;
+
+      });
+
+    }
+
+
+   
+
+
+   
+
+    await bus.save();
+
+    res.status(200).json({ success: true });
+
+  } catch (error) {
+
+    console.error('Error refreshing seats:', error);
+
+    res.status(500).json({ success: false, error: 'Failed to refresh seats' });
+
+  }
+
+
+}
+
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//sample json file to test the api in postman with email knp5826@gmail.com and validity date
+
+// {
+//   "email": "knp5826@gmail.com"
+//   "validity": "Date 1"
+// }
+
+
+
+//endpoint to save bus details in MongoDB
+
+app.post('/save-bus', async (req, res) => {
+  try {
+    const { busNo, route,starttime, returntime,capacity} = req.body;
+
+    console.log("busNo",busNo, "route",route, "starttime",starttime, "returntime",returntime, "capacity",capacity);
+
+
+    //find the existing bus document
+    const bus = await Bus.findOne();
+
+
+    console.log("bus",bus);
+
+    //if no bus document exists, create a new one with the bus details
+    if (!bus) {
+      const newBus = new Bus({
+        busDetails: [{ busNo, route, starttime, returntime, capacity }]
+      });
+      await newBus.save();
+    } else {
+      //if bus document exists, push the new bus details into the existing bus details array
+      //create a array of seats in the bus with isBooked as false and bookedBy as null
+      seats=[];
+      for(let i = 1; i <= capacity; i++){
+        seats.push({ seatNo: i, isBooked: false, bookedBy: null });
+       
+      }
+
+
+      bus.busDetails.push({ busNo, route, starttime, returntime, capacity,seats });
+   
+      await bus.save();
+    }
+
+    //for seats in the bus we can create a loop to add the seats in the bus with isBooked as false and bookedBy as null
+
+   
+
+
+    
+    res.status(200).json({ success: true });
+
+  } catch (error) {
+    console.error('Error saving bus details:', error);
+
+    res.status(500).json({ success: false, error: 'Failed to save bus details' });
+
+  }
+
+}
+
+);
+
+
+
+//end point to fetch all buses from MongoDB
+
+app.get('/get-buses', async (req, res) => {
+  try {
+    const buses = await Bus.find();
+
+    res.status(200).json(buses);
+
+  } catch (error) {
+    console.error('Error fetching buses:', error);
+
+    res.status(500).json({ error: 'Failed to fetch buses' });
+
+  }
+
+}
+
+);
+
+
+//end point to delete a specific bus from MongoDB
+
+app.delete('/delete-bus/:busId', async (req, res) => {
+
+  try {
+    const { busId } = req.params;
+    console.log("busId",busId);
+
+    const bus = await Bus.findOne();
+
+    console.log("bus",bus);
+
+    //select busdetails array from the bus document and delete the bus with the busId
+
+    bus.busDetails = bus.busDetails.filter(bus => bus._id != busId);
+
+    await bus.save();
+
+    res.status(200).json({ success: true });
+
+
+
+
+  } catch (error) {
+
+    console.error('Error deleting bus:', error);
+
+    res.status(500).json({ success: false, error: 'Failed to delete bus' });
+
+  }
+
+}
+
+);
+
+
+//end point to mark unavailable a spefic bus from MongoDB
+
+app.put('/mark-unavailable/:busId', async (req, res) => {
+
+  try {
+    const { busId } = req.params;
+
+    const bus = await Bus.findOne();
+
+    //select busdetails array from the bus document and update the status of the bus with the busId to unavailable
+
+    bus.busDetails = bus.busDetails.map(bus => {
+
+      if (bus._id == busId) {
+       //toogle the availiability of the bus
+        bus.availiable = !bus.availiable;
+      }
+
+      return bus;
+
+    });
+
+    await bus.save();
+
+    res.status(200).json({ success: true });
+
+  } catch (error) {
+
+    console.error('Error marking bus unavailable:', error);
+
+    res.status(500).json({ success: false, error: 'Failed to mark bus unavailable' });
+
+  }
+
+}
+
+);
+
+
+//end point to edit a specific bus from MongoDB
+
+app.put('/edit-bus/:busId', async (req, res) => {
+
+  try {
+    const { busId } = req.params;
+    const { busNo, route, starttime, returntime, capacity } = req.body;
+
+    const bus = await Bus.findOne();
+
+    //select busdetails array from the bus document and update the bus with the busId
+
+    bus.busDetails = bus.busDetails.map(bus => {
+
+      if (bus._id == busId) {
+
+        bus.busNo = busNo;
+
+        bus.route = route;
+
+        bus.starttime = starttime;
+
+        bus.returntime = returntime;
+
+        bus.capacity = capacity;
+
+      }
+
+      return bus;
+
+    });
+
+    await bus.save();
+
+    res.status(200).json({ success: true });
+
+  } catch (error) {
+
+    console.error('Error updating bus:', error);
+
+    res.status(500).json({ success: false, error: 'Failed to update bus' });
+
+  }
+
+}
+
+);
+
+
+
+
+
+
+
+
+
+
 
 
 

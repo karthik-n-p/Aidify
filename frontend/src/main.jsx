@@ -15,6 +15,8 @@ import Header from './components/landing-page/header';
 
 import AdminDashboard from './pages/AdminPages/AdminDashboard';
 
+import BusAdmin from './pages/AdminPages/BusAdmin';
+
 
 
 
@@ -165,9 +167,9 @@ const App = () => {
 
 
             {/*Bus Management*/}
-              <Route path='/busManagement' element={<AdminBusPanel />} />
+              <Route path='/busManagement' element={<BusAdmin/>} />
               <Route path='/bus' element={<Bus />} />
-              <Route path='/bookseat' element={<BookSeat />} />
+             <Route path='bus/bookSeat/:busno/:time/:route' element={<BookSeat />} />
 
 
        

@@ -1,82 +1,141 @@
-import React, { useState } from 'react';
-import { Box, Button, FormControl, FormLabel, Select, Heading } from '@chakra-ui/react';
-
-import { Link } from 'react-router-dom';
-
+import React, { useState, useEffect } from 'react';
+import { Box, Select, Button, VStack, Text, HStack, Grid, Image } from '@chakra-ui/react';
+import axios from 'axios';
 
 function Bus() {
+  const [buses, setBuses] = useState([]);
+  const [route, setRoute] = useState([]);
+  const [selectedRoute, setSelectedRoute] = useState('');
+  const [busDetails, setBusDetails] = useState([]);
+  const [selectedBus, setSelectedBus] = useState(null);
+  const [seat, setSeat] = useState([]);
+  const [selectedSeat, setSelectedSeat] = useState(null);
+  const [isBookingSuccess, setIsBookingSuccess] = useState(false);
 
-  const [bus, setBus] = useState('');
-  const [time, setTime] = useState('');
-  const [route, setRoute] = useState('');
+  useEffect(() => {
+    async function fetchBuses() {
+      try {
+        const response = await axios.get('http://localhost:3000/get-buses');
+        setBuses(response.data[0].busDetails);
+        const busdata = response.data[0].busDetails;
+        const route = [...new Set(busdata.map((bus) => bus.route))];
+        setRoute(route);
+      } catch (error) {
+        console.error('Error fetching buses:', error);
+      }
+    }
+    fetchBuses();
+  }, []);
 
-  const handleBook = () => {
-
-    console.log("Sending booked bus details to admin:", { route, time, bus });
-    
+  const handleRouteChange = (event) => {
+    setSelectedRoute(event.target.value);
+    const selectedBus = buses.filter((bus) => bus.route === event.target.value);
+    setBusDetails(selectedBus);
   };
 
 
-  const buses = {
-    Kannur: {
-      Morning: ["Bus No 4 (8:10 AM)", "Bus No 5  (8:15 AM)", "Bus No 3  (8:20 AM)"],
-      Evening: ["Bus No 4  (4:35 PM)", "Bus No 5  (4:40 PM)", "Bus No 3  (4:45 PM)"]
-    },
-    Thalassery: {
-      Morning: ["Anvitha (8:55 AM)", "Amritham (9:00 AM)"],
-      Evening: ["Anvitha (4:47 PM)", "Amritham (4:50 PM)"]
-    },
-    MeleChovva: {
-        Morning: ["Bus No 6 (8:17 AM)"],
-        Evening: ["Bus No 6 (4:45 PM)"]
-    },
-    Chalode: {
-        Morning: ["Bus No 1 (8:35 AM)"],
-        Evening: ["Bus No 1 (4:45 PM)"]
-    },
-    Mattanur: {
-        Morning: ["Bus No 2 (8:35 AM)"],
-        Evening: ["Bus No 2 (4:45 PM)"]
-    },
+  const [showseat, setShowseat] = useState(false);
+  const handleBusSelect = (bus) => {
+    setSelectedBus(bus);
+
+    setSeat(bus.seats);
+
+    setShowseat(!showseat);
   };
+
+  const handleBooking = async () => {
+    try {
+      const email = localStorage.getItem('email');
+      const response = await axios.post('http://localhost:3000/book-seat', {
+        busId: selectedBus._id,
+        seatNo: selectedSeat.seatNo,
+        email: email
+      });
+      console.log(response.data);
+      setIsBookingSuccess(true);
+      // Generate and display image with seat and email details
+    } catch (error) {
+      console.error('Error booking seat:', error);
+      alert('Error booking seat. Please try again later.');
+    }
+  };
+
+  const handleDownloadImage = () => {
+    const link = document.createElement('a');
+    link.href = `https://via.placeholder.com/300?text=Seat+${selectedSeat.seatNo}+on+Bus+No/Name+${selectedBus.busNo}+Booked+by+${localStorage.getItem('email')}`;
+    link.download = 'bus_ticket.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+
+
+
+    //automatically set availiablity of seat isbooked to flase after 12 am
+
+    useEffect(() => {
+
+      const handleSeatAvailablity = async () => {
+        try{
+          const res = await axios.put('http://localhost:3000/refresh-seats');
+          console.log(res.data);
+
+        }catch(error){
+          console.error('Error removing booked seats:', error);
+
+
+
+        }
+      }
+      handleSeatAvailablity();
+    }
+    ,[buses]);
+
 
   return (
-    <Box p={4} ml="10%" w="80%">
-      <Heading as="h1" size="xl" mb="20px">Reserve Your College Bus Seat</Heading>
+    <Box pl={150}>
+      <Select placeholder="Select Route" onChange={handleRouteChange}>
+        {route.map((route) => (
+          <option key={route} value={route}>
+            {route}
+          </option>
+        ))}
+      </Select>
+      <VStack mt={4} spacing={4}>
+        {busDetails.map((bus) => (
+          <Box key={bus._id} borderWidth="1px" borderRadius="lg" p={4}>
+            <Text fontSize="lg" fontWeight="bold" mb={2}>Bus Name/No: {bus.busNo}</Text>
+            <Text>Start Time: {bus.starttime}</Text>
+            <Text>Return Time: {bus.returntime}</Text>
+            <Grid templateColumns={`repeat(${Math.ceil(Math.sqrt(bus.seats.length))}, 1fr)`} gap={2} mt={4}>
+            <Button onClick={() => handleBusSelect(bus)} bg={selectedBus === bus ? "blue.500" : "gray.100"} color={selectedBus === bus ? "white" : "gray.800"} _hover={{ bg: selectedBus === bus ? "blue.600" : "gray.200" }} cursor="pointer">
+                Select Bus
+              </Button>
 
-      <FormControl mt={4}>
-          <FormLabel>Time</FormLabel>
-          <Select placeholder="Select time" value={time} onChange={(e) => setTime(e.target.value)}>
-            <option value="Morning">Morning</option>
-            <option value="Evening">Evening</option>
-          </Select>
-        </FormControl>
-
-      <FormControl mt={4}>
-        <FormLabel>Route</FormLabel>
-        <Select placeholder="Select Route" value={route} onChange={(e) => setRoute(e.target.value)}>
-          <option value="Kannur">Kannur</option>
-          <option value="Thalassery">Thalassery</option>
-          <option value="MeleChovva">MeleChovva</option>
-          <option value="Chalode">Chalode</option>
-          <option value="Mattanur">Mattanur</option>
-        </Select>
-      </FormControl>
-
-        
-
-      {time && route && (
-        <FormControl mt={4}>
-          <FormLabel>Bus</FormLabel>
-          <Select placeholder="Select Bus" value={bus} onChange={(e) => setBus(e.target.value)}>
-            {buses[route][time].map((routeOption, index) => (
-              <option key={index} value={routeOption}>{routeOption}</option>
-            ))}
-          </Select>
-        </FormControl>
+              {showseat && selectedBus === bus && bus.seats.map((seat) => (
+             
+                <Button
+                  key={seat.seatNo}
+                  bg={seat.isBooked ? "gray.300" : selectedSeat === seat ? "blue.500" : "gray.100"}
+                  color={seat.isBooked ? "red" : "green"}
+                  _hover={!seat.isBooked && { bg: "gray.200" }}
+                  cursor={seat.isBooked ? "not-allowed" : "pointer"}
+                  onClick={() => setSelectedSeat(seat)}
+                >
+                  {seat.seatNo}
+                </Button>
+              ))}
+            </Grid>
+          </Box>
+        ))}
+      </VStack>
+      <Button mt={4} colorScheme="green" onClick={handleBooking} disabled={!selectedSeat}>Book Seat</Button>
+      {isBookingSuccess && selectedSeat && (
+        <Box mt={4}>
+          <Button colorScheme="blue" onClick={handleDownloadImage}>Download Ticket</Button>
+        </Box>
       )}
-
-      <Button as={Link} to="/bookseat/null" mt={4} colorScheme="blue" onClick={handleBook} disabled={!location || !time || !route}>Book Bus</Button>
     </Box>
   );
 }

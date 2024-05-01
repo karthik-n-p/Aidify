@@ -1,74 +1,84 @@
-// doctor.js
-
 const mongoose = require('mongoose');
-const { cli } = require('winston/lib/winston/config');
-const Clinic = require('./clinic');
 
-// Define the Doctor schema
-const doctorSchema = new mongoose.Schema({
-  name: String,
-  specialization: String,
-  role: String,
-  clinicId: String,
-  ClinicName: String,
-  experience: String,
-  description: String,
-  institutionalEmail: String,
+// Define the bus schema
 
-  numberofAppointments: {
-    type: Number,
-    default: 0,
+
+// Define schema for bus with route time and bus number
+const busDetails = new mongoose.Schema({
+  route: {
+      type: String,
+      required: true
   },
-  numberofofflineAppointments: {
-    type: Number,
-    default: 0,
+  starttime : {
+      type : String,
+      required : true
   },
-  numberofonlineAppointments: {
-    type: Number,
-    default: 0,
+  returntime : {
+      type : String,
+      required : true
   },
-  
 
-  availability : [{
-   
-    timeSlots: [{ 
-      startTime:Date,
-      endTime: Date,
-      availability: Boolean
-    }]
-  }],
-
-  
-
-
-
-  
-appointment: [{ 
-    patientId: String,
-    patientName: String,
-    bookedSlot: [{  startTime: String, endTime: String }],
-    status: String,
-    meetingLink: String,
-    mode: String,
-  }],
-
-
-  sharedDocuments: [{ 
-    patientName: String,
-    files: [{ 
-      filename: String,
-      fileSize: Number,
-      ipfsHash: String,
-    }]
-  }],
-
-  
-
-
-
-
-
+ 
+  busNo: {
+      type: String,
+      required: true
+  },
+  availiable:{
+     type :Boolean,
+      default : true
+  },
+  seats: [{
+      seatNo: {
+          type: String,
+          required: true
+      },
+      isBooked: {
+          type: Boolean,
+          default: false
+      },
+      bookedBy: {
+          type: String,
+          default: null
+      }
+  }]
 });
 
-// Create and export the Doctor model
-module.exports = mongoose.model('Doctor', doctorSchema);
+
+
+
+
+const busSchema = new mongoose.Schema({
+
+    //add a array of email who have bus pass 
+
+    users: [{
+       email : {
+           type: String,
+           required: true
+       },
+        validity: {
+            type: String,
+            required: true
+        },
+      }],
+      
+
+       busDetails: [busDetails] // Embed the busDetails schema as a field
+
+
+   
+
+
+
+   
+   
+});
+
+
+
+
+// Create the Bus model
+
+const Bus = mongoose.model('Bus', busSchema);
+
+module.exports = Bus;
