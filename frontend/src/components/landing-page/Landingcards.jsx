@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom'
 //import all images from assets folder
 import Grievance from '../../../assets/grievance.png';
 import Collegebus from '../../../assets/collegebus.png';
-import Marketplace from '../../../assets/marketplace.png
+import Marketplace from '../../../assets/marketplace.png';
 
 
 function Landingcards() {
