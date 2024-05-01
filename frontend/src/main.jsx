@@ -52,9 +52,20 @@ const customTheme = extendTheme({
     grey1: '#A0AEC0',
     txtb: '#000000',
   },
-  config: {
-    initialColorMode: 'dark', // Set to 'dark' for dark mode by default
+
+
+  styles: {
+    global: {
+      body: {
+        color: 'txtb',
+        bg: 'bg',
+      },
+    },
   },
+
+ 
+
+ 
 });
 
 const App = () => {
