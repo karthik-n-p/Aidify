@@ -13,7 +13,7 @@ export default function Landing() {
   console.log("Inside landing.jsx isRegistered: ",isRegistered)
 
   return (
-    <Box bg={'bg'} >
+    <Box bg={'bg'} alignItems={'center'} justifyContent={'center '}      >
 
           {<Landingcards/>}
 
