@@ -2,12 +2,30 @@ import React from 'react'
 import { Box, Heading, Button, Table, Thead, Tbody, Tr, Th, Td} from '@chakra-ui/react'
 
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 function GrievanceStudent() {
-    const earlierSubmissions = [
-        { id: 1, status: 'Resolved', ticketDate: '2024-04-20', ticketType: 'Complaint', subject: 'Issue with billing' },
-        { id: 2, status: 'Not Resolved', ticketDate: '2024-04-25', ticketType: 'Issue', subject: 'Problem with service' },
-      ];
+
+  const [earlierSubmissions, setEarlierSubmissions] = React.useState([{}]);
+
+     React.useEffect(() => {
+      fetchcomplaints();
+    }, []);
+
+
+    const fetchcomplaints = async () => {
+
+      const res = await axios.get('http://localhost:3000/grievances');
+      console.log(res.data);
+      setEarlierSubmissions(res.data);
+    }
+
+
+
+
+
+
+   
     
       return (
         <Box p={8} width="80%" ml="10%" >
@@ -28,9 +46,10 @@ function GrievanceStudent() {
               {earlierSubmissions.map(submission => (
                 <Tr key={submission.id}>
                   <Td>{submission.status}</Td>
-                  <Td>{submission.ticketDate}</Td>
-                  <Td>{submission.ticketType}</Td>
-                  <Td>{submission.subject}</Td>
+                  <Td>{submission.Date}</Td>
+                  <Td>{submission.type}</Td>
+                  <Td>{submission.Subject}</Td>
+                  
                 </Tr>
               ))}
             </Tbody>

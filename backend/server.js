@@ -15,9 +15,6 @@ const logger = require('winston');
 
 const mongoose = require('mongoose');
 
-const multer = require('multer');
-const FormData = require('form-data');
-const fs = require('fs');
 
 //CORS is a node.js package for providing a Connect/Express middleware that can be used to enable CORS with various options.
 const app = express();
@@ -134,9 +131,7 @@ var generator = require('generate-password');
 
 
 
-    const storage = multer.memoryStorage();
-    const upload = multer({ storage: storage });
-    
+
 
 // const Patient = require('./models/Student');
 
@@ -453,6 +448,228 @@ app.put('/available-product/:productId', async (req, res) => {
 }
 
 );
+
+
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
+
+// Define storage for uploaded files
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Save files in the 'uploads' folder
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+// Create upload middleware
+const upload = multer({ storage: storage });
+
+//Endpoint to save grievance details in MongoDB for students it will contain files as attachments
+
+const Grievance = require('./models/Grievance');
+
+app.post('/save-grievance', upload.array('attachments', 5), async (req, res) => {
+  try {
+    //upload.array('attachments', 5) is used to upload multiple files with the same name 'attachments' and maximum 5 files can be uploaded
+    //req.files contains the uploaded files and req.body contains the text data
+
+   
+
+    
+
+
+    const { type, description, Subject, Date, username } = req.body;
+
+    //save the uploaded in backend folder and save the path in the database
+
+ // Create array to store attachment details
+ const attachments = req.files.map(file => {
+  return {
+    filename: file.originalname,
+    path: file.path, // Save the file path
+    size: file.size,
+    mimetype: file.mimetype
+  };
+});
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+    // Create a new Grievance document
+    const grievance = new Grievance({
+      type,
+      description,
+      Subject,
+      Date,
+      username,
+      attachments,
+    });
+
+
+    await grievance.save();
+
+    res.status(200).json({ success: true });
+
+
+  } catch (error) {
+    console.error('Error saving grievance details:', error);
+
+    res.status(500).json({ success: false, error: 'Failed to save grievance details' });
+
+  }
+
+}
+
+);
+
+//sample json file to test the api in postman
+// {
+//   "type": "Type 1",
+//   "description": "Description 1",
+//   "Subject": "Subject 1",
+//   "Date": "Date 1",
+//   "username": "Username 1"
+// }
+
+
+// Endpoint to fetch all grievances from MongoDB
+
+app.get('/grievances', async (req, res) => {
+
+  try {
+    const grievances = await Grievance.find();
+
+    res.status(200).json(grievances);
+
+  } catch (error) {
+    console.error('Error fetching grievances:', error);
+
+    res.status(500).json({ error: 'Failed to fetch grievances' });
+
+  }
+
+}
+
+);
+
+
+
+app.get('/uploads/:filename', (req, res) => {
+  const { filename } = req.params;
+  const filePath = path.join(__dirname, 'uploads', filename);
+
+  // Check if file exists
+  if (fs.existsSync(filePath)) {
+    // Serve the file
+    res.sendFile(filePath);
+  } else {
+    res.status(404).json({ error: 'File not found' });
+  }
+});
+
+
+//Endpoint to fetch a specific grievance from MongoDB
+
+app.get('/grievance/:grievanceId', async (req, res) => {
+  try {
+
+    const { grievanceId } = req.params;
+
+    const grievance = await Grievance.findOne({ _id: grievanceId });
+
+
+    if (!grievance) {
+      return res.status(404).json({ success: false, error: 'Grievance not found' });
+    }
+
+    res.status(200).json(grievance);
+
+  } catch (error) {
+    console.error('Error fetching grievance:', error);
+
+    res.status(500).json({ error: 'Failed to fetch grievance' });
+
+  }
+
+}
+
+);
+
+
+
+//Endpoint to give response to a specific grievance from MongoDB
+
+app.put('/respond-grievance/:grievanceId', async (req, res) => {
+  try {
+    const { grievanceId } = req.params;
+    const { response } = req.body;
+
+    console.log("response",response);
+    console.log("grievanceId",grievanceId);
+
+    const grievance = await Grievance.findOne({ _id: grievanceId });
+    console.log("grievance",grievance);
+
+    if (!grievance) {
+      return res.status(404).json({ success: false, error: 'Grievance not found' });
+    }
+
+    grievance.response = response;
+
+    grievance.status = 'resolved';
+
+    await grievance.save();
+
+    res.status(200).json({ success: true });
+
+  } catch (error) {
+
+    console.error('Error responding to grievance:', error);
+
+    res.status(500).json({ success: false, error: 'Failed to respond to grievance' });
+
+  }
+
+}
+
+);
+
+//sample json file to test the api in postman
+
+// {
+//   "response": "Response 1"
+// }
+
+
+
+
+
+
+
+
+
+
 
 
 

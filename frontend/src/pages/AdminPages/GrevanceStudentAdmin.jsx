@@ -1,12 +1,23 @@
 import { Box, Heading, Button, Table, Thead, Tbody, Tr, Th, Td, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Text, Textarea, FormControl, FormLabel, Input } from '@chakra-ui/react';
+import axios from 'axios';
 import React, { useState } from 'react';
 
 function GrievanceStudentAdmin() {
   // Dummy data for grievance tickets (replace with actual data)
-  const grievanceTickets = [
-    { id: 1, userName: 'John Doe', ticketDate: '2024-04-20', subject: 'Issue with billing', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', attachments: ['attachment1.jpg', 'attachment2.pdf'], feedback: '', resolved: true },
-    { id: 2, userName: 'Jane Smith', ticketDate: '2024-04-25', subject: 'Problem with service', description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', attachments: ['attachment3.png'], feedback: '', resolved: false },
-  ];
+
+  const [grievanceTickets, setgrievanceTickets] = React.useState([{}]);
+
+  React.useEffect(() => {
+   fetchcomplaints();
+ }, []);
+
+
+ const fetchcomplaints = async () => {
+
+   const res = await axios.get('http://localhost:3000/grievances');
+   console.log(res.data);
+   setgrievanceTickets(res.data);
+ }
 
   // State to manage modal for displaying ticket details
   const [selectedTicket, setSelectedTicket] = useState(null);
@@ -27,9 +38,34 @@ function GrievanceStudentAdmin() {
   };
 
   // Function to handle submitting feedback
-  const handleFeedbackSubmit = (e) => {
+  const handleFeedbackSubmit = async (e) => {
     e.preventDefault();
-    // Update ticket feedback
+    console.log("feedback",e.target.elements.feedback.value);
+
+    try{
+
+      const res = await axios.put(`http://localhost:3000/respond-grievance/${selectedTicket._id}`, {
+        response: e.target.elements.feedback.value,
+       
+      });
+      console.log(res.data);
+
+      if (res.status === 200){
+        setSelectedTicket(prevState => ({ ...prevState, feedback: e.target.elements.feedback.value }));
+        setIsModalOpen(false);
+      }
+
+
+
+
+    
+    }
+
+    catch (error) {
+      console.log(error);
+    }
+
+   
     setSelectedTicket(prevState => ({ ...prevState, feedback: e.target.elements.feedback.value }));
   };
 
@@ -49,14 +85,23 @@ function GrievanceStudentAdmin() {
         <Tbody>
           {grievanceTickets.map(ticket => (
             <Tr key={ticket.id}>
-              <Td>{ticket.userName}</Td>
-              <Td>{ticket.ticketDate}</Td>
-              <Td>{ticket.subject}</Td>
-              <Td>{ticket.resolved ? 'Resolved' : 'Not Resolved'}</Td>
+              <Td>{ticket.username}</Td>
+              <Td>{ticket.Date}</Td>
+              <Td>{ticket.Subject}</Td>
+              <Td>{ticket.status}</Td>
+              {ticket.status === 'pending' ? (
               <Td>
+                <Button colorScheme="blue" onClick={() => handleViewDetails(ticket)}>Resolve</Button>
+              </Td>
+              ) : (
+                <Td>
                 <Button colorScheme="blue" onClick={() => handleViewDetails(ticket)}>View Details</Button>
               </Td>
+          
+              )}
             </Tr>
+         
+
           ))}
         </Tbody>
       </Table>
@@ -69,26 +114,40 @@ function GrievanceStudentAdmin() {
           <ModalBody>
             {selectedTicket && (
               <>
-                <Text mb={2}>User Name: {selectedTicket.userName}</Text>
-                <Text mb={2}>Ticket Date: {selectedTicket.ticketDate}</Text>
-                <Text mb={2}>Subject: {selectedTicket.subject}</Text>
-                <Text mb={2}>Resolved: {selectedTicket.resolved ? 'Yes' : 'No'}</Text>
+                <Text mb={2}>User Name: {selectedTicket.username}</Text>
+                <Text mb={2}>Ticket Date: {selectedTicket.Date}</Text>
+                <Text mb={2}>Subject: {selectedTicket.Subject}</Text>
+                <Text mb={2}>Resolved: {selectedTicket.status}</Text>
                 <Text mb={4}>Description: {selectedTicket.description}</Text>
                 <Heading size="md" mb={2}>Attachments</Heading>
                 {selectedTicket.attachments.map((attachment, index) => (
-                  <Box key={index} mb={2}>
-                    <a href={`/${attachment}`} target="_blank" rel="noopener noreferrer">{attachment}</a>
-                  </Box>
-                ))}
+    <Box key={index} mb={2}>
+    <Text>{attachment.filename}</Text>
+    <Button as="a"
+      href={`http://localhost:3000/uploads/${attachment.filename}`}
+      target="_blank"
+      download
+      colorScheme="blue"
+      size="sm"
+      mt={2}
+    >
+      Download
+    </Button>
+  </Box>
+))}
+
                 <form onSubmit={handleFeedbackSubmit}>
+                  {selectedTicket.status === 'pending' && (
+                    <>
                   <FormControl mb={4}>
                     <FormLabel>Feedback</FormLabel>
                     <Textarea name="feedback" />
                   </FormControl>
-                  <Button type="submit" colorScheme="blue" mr={2}>Submit Feedback</Button>
-                  {!selectedTicket.resolved && (
-                    <Button colorScheme="green" onClick={handleResolveTicket}>Resolve Ticket</Button>
+                  
+                  <Button type="submit" colorScheme="green" mr={2}>Resolve Ticket</Button>
+                  </>
                   )}
+                
                 </form>
               </>
             )}

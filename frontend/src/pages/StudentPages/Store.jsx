@@ -31,9 +31,8 @@ function Marketplace() {
   const toast = useToast(); // Initialize useToast hook
   const [viewingMyProducts, setViewingMyProducts] = useState(false);
   const userdata = localStorage.getItem('authData');
-
-  const seller = JSON.parse(userdata).username;
-  const sellersuid = JSON.parse(userdata).uid;
+  const seller = userdata ? JSON.parse(userdata).username : '';
+  const sellersuid = userdata ? JSON.parse(userdata).uid : '';
   console.log('uid', sellersuid);
   console.log('username', seller);
 
