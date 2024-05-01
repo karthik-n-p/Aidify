@@ -39,7 +39,7 @@
 
 //       const fetchPatients = async () => {
 //           try {
-//             const patientsCollection = await axios.get(`http://localhost:3000/past-appointments-patient/${username}`);
+//             const patientsCollection = await axios.get(`https://aidify.onrender.com/past-appointments-patient/${username}`);
 //             //divide futrue array into 2 arrays first 4 and last 4 and combine them as array of arrays
 //             console.log("patientsCollection",patientsCollection.data);
 

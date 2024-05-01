@@ -11,7 +11,7 @@ export default function Landing() {
   const { isRegistered } = React.useContext(AuthContext);
   const {isadmin} = useContext(AuthContext);
   console.log("Inside landing.jsx isRegistered: ",isRegistered)
-
+  console.log(import.meta.env.VITE_SOME_KEY) 
   return (
     <Box bg={'bg'} alignItems={'center'} justifyContent={'center '}      >
 

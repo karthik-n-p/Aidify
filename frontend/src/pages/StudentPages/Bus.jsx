@@ -19,7 +19,7 @@ function Bus() {
   useEffect(() => {
     async function fetchBuses() {
       try {
-        const response = await axios.get('http://localhost:3000/get-buses');
+        const response = await axios.get('https://aidify.onrender.com/get-buses');
         console.log("response ",response)
         setBuses(response.data[0].busDetails);
 
@@ -78,7 +78,7 @@ function Bus() {
   const handleBooking = async () => {
     try {
       const email = localStorage.getItem('email');
-      const response = await axios.post('http://localhost:3000/book-seat', {
+      const response = await axios.post('https://aidify.onrender.com/book-seat', {
         busId: selectedBus._id,
         seatNo: selectedSeat.seatNo,
         email: email
@@ -111,7 +111,7 @@ function Bus() {
 
       const handleSeatAvailablity = async () => {
         try{
-          const res = await axios.put('http://localhost:3000/refresh-seats');
+          const res = await axios.put('https://aidify.onrender.com/refresh-seats');
           console.log(res.data);
 
         }catch(error){
@@ -124,6 +124,36 @@ function Bus() {
       handleSeatAvailablity();
     }
     ,[buses]);
+
+
+    //handle time selection
+
+    const [timesection, setTimesection] = useState('');
+    const handletimesection = (event) => {
+      setTimesection(event.target.value);
+
+      //declare a variable to store the time if the section is morning set the time to start time else set the time to return time
+
+      var time = '';
+
+      if(event.target.value === 'morning'){
+        busDetails.map((bus) => (
+          time = bus.starttime
+        ));
+
+
+      }
+      else{
+        busDetails.map((bus) => (
+          time = bus.returntime
+        ));
+       
+      }
+      console.log("inside timesection",busDetails)
+
+     
+    };
+
 
 
   return (

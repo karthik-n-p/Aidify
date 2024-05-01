@@ -60,7 +60,7 @@ function BusAdmin() {
 
   const fetchBuses = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/get-buses');
+      const response = await axios.get('https://aidify.onrender.com/get-buses');
       setBuses(response.data[0].busDetails);
     } catch (error) {
       toast({
@@ -78,7 +78,7 @@ function BusAdmin() {
     e.preventDefault();
 
     try {
-      await axios.post('http://localhost:3000/bus-add-user', {
+      await axios.post('https://aidify.onrender.com/bus-add-user', {
         email: userEmail,
         validity: selectedDate.toISOString()
       });
@@ -109,7 +109,7 @@ function BusAdmin() {
     e.preventDefault();
 
     try {
-      await axios.post('http://localhost:3000/save-bus', {
+      await axios.post('https://aidify.onrender.com/save-bus', {
         busNo,
         route,
         starttime,
@@ -144,7 +144,7 @@ function BusAdmin() {
 
   const handleRemoveBus = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/delete-bus/${id}`);
+      await axios.delete(`https://aidify.onrender.com/delete-bus/${id}`);
       fetchBuses();
       toast({
         title: 'Success',
@@ -167,7 +167,7 @@ function BusAdmin() {
 
   const handleMarkUnavailable = async (id) => {
     try {
-      await axios.put(`http://localhost:3000/mark-unavailable/${id}`);
+      await axios.put(`https://aidify.onrender.com/mark-unavailable/${id}`);
       fetchBuses();
       toast({
         title: 'Success',
@@ -202,7 +202,7 @@ function BusAdmin() {
   // Function to update bus details
   const handleUpdateBus = async () => {
     try {
-      await axios.put(`http://localhost:3000/edit-bus/${editBusId}`, {
+      await axios.put(`https://aidify.onrender.com/edit-bus/${editBusId}`, {
         busNo: editBusNo,
         route: editRoute,
         starttime: editStartTime,
@@ -233,7 +233,7 @@ function BusAdmin() {
   // Function to fetch registered users from the server
   const fetchRegisteredUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/bus-users');
+      const response = await axios.get('https://aidify.onrender.com/bus-users');
       setRegisteredUsers(response.data);
       setShowRegisteredUsersModal(true);
     } catch (error) {
@@ -252,7 +252,7 @@ function BusAdmin() {
   useEffect(() => {
     const deleteUser = async () => {
       try {
-        await axios.delete('http://localhost:3000/delete-user');
+        await axios.delete('https://aidify.onrender.com/delete-user');
         fetchBuses();
       } catch (error) {
         console.error('Error deleting user:', error);

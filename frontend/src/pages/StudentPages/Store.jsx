@@ -60,7 +60,7 @@ function Marketplace() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/products');
+      const response = await axios.get('https://aidify.onrender.com/products');
       const data = response.data;
       const filteredData = viewingMyProducts
         ? data.filter((product) => product.sellersuid === sellersuid)
@@ -88,7 +88,7 @@ function Marketplace() {
         sellersuid: sellersuid,
       };
       console.log('Form data with seller:', formDataWithSeller);
-      await axios.post('http://localhost:3000/save-product', formDataWithSeller);
+      await axios.post('https://aidify.onrender.com/save-product', formDataWithSeller);
       fetchProducts();
       setShowAddProductForm(false);
 
@@ -106,7 +106,7 @@ function Marketplace() {
 
   const handleSearch = async (searchText) => {
     try {
-      const response = await axios.get(`http://localhost:3000/products`);
+      const response = await axios.get(`https://aidify.onrender.com/products`);
       const filteredProducts = response.data.filter((product) =>
         product.title.toLowerCase().includes(searchText.toLowerCase())
       );
@@ -119,7 +119,7 @@ function Marketplace() {
   const handleSort = async (sortBy) => {
     try {
       console.log('sortBy', sortBy);
-      const response = await axios.get(`http://localhost:3000/products`);
+      const response = await axios.get(`https://aidify.onrender.com/products`);
       if(sortBy === 'price') {
         const sortedProducts = response.data.sort((a, b) => a.price - b.price);
         setProducts(sortedProducts);
@@ -142,7 +142,7 @@ function Marketplace() {
     setViewingMyProducts(!viewingMyProducts);
 
     try {
-      const response = await axios.get('http://localhost:3000/products');
+      const response = await axios.get('https://aidify.onrender.com/products');
       const data = response.data;
 
       const filteredData = data.filter((product) => product.sellersuid !== sellersuid && product.status !== 'sold');
@@ -158,7 +158,7 @@ function Marketplace() {
 
   const handleMyProduct = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/products');
+      const response = await axios.get('https://aidify.onrender.com/products');
       const data = response.data;
       const filteredData = data.filter((product) => product.sellersuid === sellersuid);
       setProducts(filteredData);
@@ -171,7 +171,7 @@ function Marketplace() {
 
   const handleBookProduct = async (productId) => {
     try {
-      await axios.post('http://localhost:3000/book-product', { productId, buyer: sellersuid });
+      await axios.post('https://aidify.onrender.com/book-product', { productId, buyer: sellersuid });
       fetchProducts();
       setShowModal(true);
       setSelectedProduct(products.find((product) => product._id === productId));
@@ -204,7 +204,7 @@ function Marketplace() {
   const handleRevert = async (productId) => {
     console.log('productId', productId);
     try {
-      await axios.put('http://localhost:3000/revert-product', {productId: productId});
+      await axios.put('https://aidify.onrender.com/revert-product', {productId: productId});
       fetchProducts();
     } catch (error) {
       console.error('Error reverting product:', error);
@@ -213,7 +213,7 @@ function Marketplace() {
 
   const handleRemove = async (productId) => {
     try {
-      await axios.delete(`http://localhost:3000/delete-product/${productId}`);
+      await axios.delete(`https://aidify.onrender.com/delete-product/${productId}`);
 
       fetchProducts();
 
@@ -256,7 +256,7 @@ function Marketplace() {
         seller: seller,
         sellersuid: sellersuid,
       };
-      await axios.put(`http://localhost:3000/update-product/${productId}`, formDataWithSeller);
+      await axios.put(`https://aidify.onrender.com/update-product/${productId}`, formDataWithSeller);
       setShowEditModal(false);
       toast({
         title: 'Product edited successfully',

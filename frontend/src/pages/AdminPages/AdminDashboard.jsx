@@ -69,7 +69,7 @@ const AdminBusPanel = () => {
     const fetchData = () => {
       // Fetch data from backend
       axios
-        .get(`http://localhost:3000/get-slots/${username}`)
+        .get(`https://aidify.onrender.com/get-slots/${username}`)
         .then((response) => {
           console.log(response.data);
           setSlots(response.data);
@@ -83,7 +83,7 @@ const AdminBusPanel = () => {
         //fetch data of doctor from backend
 
         axios
-        .get(`http://localhost:3000/doctor/${username}`)
+        .get(`https://aidify.onrender.com/doctor/${username}`)
         .then((response) => {
           console.log("dr details in dr dashboard",response.data);
           setDoctor(response.data);
@@ -142,7 +142,7 @@ const AdminBusPanel = () => {
   
     // Send data to backend
     axios
-      .post("http://localhost:3000/remove-slot", data)
+      .post("https://aidify.onrender.com/remove-slot", data)
       .then((response) => {
         console.log(response.data);
         // Optionally, you can update UI or show a success message
@@ -217,7 +217,7 @@ const handleSaveSlot = () => {
 
   // Send data to backend
   axios
-    .post("http://localhost:3000/create-slot", data)
+    .post("https://aidify.onrender.com/create-slot", data)
     .then((response) => {
       console.log(response.data);
       // Close the modal after successful creation

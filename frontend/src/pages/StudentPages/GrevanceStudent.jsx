@@ -15,7 +15,7 @@ function GrievanceStudent() {
 
     const fetchcomplaints = async () => {
 
-      const res = await axios.get('http://localhost:3000/grievances');
+      const res = await axios.get('https://aidify.onrender.com/grievances');
       console.log(res.data);
       setEarlierSubmissions(res.data);
     }

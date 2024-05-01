@@ -29,7 +29,7 @@ const checkAdmin = async (user) => {
     const uid=user.uid;
     console.log(uid);
     //post request to backend to check if user is admin or not using axios passing uid as parameter
-    axios.post('http://localhost:3000/admin-status', {uid})
+    axios.post('https://aidify.onrender.com/admin-status', {uid})
     .then((response) => {
       console.log("check admin status",response.data.isAdmin);
       if(response.data){
