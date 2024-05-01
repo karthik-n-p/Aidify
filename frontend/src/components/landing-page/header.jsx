@@ -3,6 +3,7 @@ import { Box, Flex, Spacer, IconButton, Input, InputGroup, InputRightElement, Ci
 import { FaArrowDown, FaBell, FaChevronDown, FaSearch, FaSortDown, FaSun, FaUser } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 
+
 import { useEffect } from 'react';
 import { useContext } from 'react';
 import AuthContext from '../../pages/StudentPages/AuthContext';
@@ -31,15 +32,18 @@ const Header = () => {
   return (
     <Box pos="static" display="flex" top="0" width="100%" zIndex={20} bg={'bg'}  px={'40px'} py='20px'>
       <Flex align="center" justifyContent={'space-between'}  width="100%">
-        {/* Logo */}
-        <Flex w={'70px'} h={'70px'}  alignItems={'center'} justifyContent={'center'} borderRadius={'50%'}    bg={'white'}>
-         <Text fontSize={'30px'} color={'btng'}>A</Text>
-         
-        </Flex>
+        
+      <Link to="/" style={{ textDecoration: 'none' }}>
+      <Flex alignItems="center">
+        
+        <img src="./assets/aidifylogo.jpg" alt="Logo" style={{ width: '70px', height: '70px', borderRadius: '50%', backgroundColor: 'white' }} />
 
-        <Flex ml={'20px'} borderRadius={'20px'} fontStyle={'bold'} px="4" py="2"  textAlign={'center'} border={'3px solid white'}>
+        
+        <Text as="h1" ml="5px" color="#0000cc" fontWeight="bold" fontSize="3xl" borderRadius="20px" px="3" py="1" textAlign="center" border="1px solid white"  style={{ letterSpacing: '2px' }} >
           AIDIFY
-        </Flex>
+        </Text>
+      </Flex>
+    </Link>
         
 
         {/* Search bar */}
