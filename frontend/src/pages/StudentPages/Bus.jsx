@@ -13,6 +13,8 @@ function Bus() {
   const [selectedSeat, setSelectedSeat] = useState(null);
   const [isBookingSuccess, setIsBookingSuccess] = useState(false);
   const [userhaspass, setUserhaspass] = useState(false);
+  const [time, setTime] = useState('');
+
 
   useEffect(() => {
     async function fetchBuses() {
@@ -82,6 +84,7 @@ function Bus() {
         email: email
       });
       console.log(response.data);
+      console.log("email",email);
       setIsBookingSuccess(true);
       // Generate and display image with seat and email details
     } catch (error) {
@@ -92,7 +95,7 @@ function Bus() {
 
   const handleDownloadImage = () => {
     const link = document.createElement('a');
-    link.href = `https://via.placeholder.com/300?text=Seat+${selectedSeat.seatNo}+on+Bus+No/Name+${selectedBus.busNo}+Booked+by+thushar`;
+    link.href = `https://via.placeholder.com/300?text=Seat+No+${selectedSeat.seatNo}+on+${time}+Bus+No+${selectedBus.busNo}+Booked+by+${localStorage.getItem('email')}`;
     link.download = 'bus_ticket.png';
     document.body.appendChild(link);
     link.click();
@@ -155,17 +158,14 @@ function Bus() {
 
   return (
     userhaspass ? (
-    <Box pl={150} pt={50} minHeight="300px">
+    <Box pl={150} pt={50} minHeight="280px" paddingBottom="30px">
       <Heading as="h1" size="xl" mb="20px">
         College Bus Seat Reservation
       </Heading>
-{/*give a selction for selecting morning or evening bus */}
-    
-
-
-
-
-
+      <Select id="time" mb="20px" placeholder="Select Time" value={time} onChange={(e) => setTime(e.target.value)}>
+          <option value="Morning">Morning</option>
+          <option value="Evening">Evening</option>
+        </Select>
       <Select placeholder="Select Route" onChange={handleRouteChange}>
         {route.map((route) => (
           <option key={route} value={route}>
@@ -173,10 +173,7 @@ function Bus() {
           </option>
         ))}
       </Select>
-      <Select placeholder="Select Route" onChange={handletimesection}>
-        <option value="morning">Morning</option>
-        <option value="evening">Evening</option>
-      </Select>
+      
 
       <VStack mt={4} spacing={4}>
         {busDetails.map((bus) => (
