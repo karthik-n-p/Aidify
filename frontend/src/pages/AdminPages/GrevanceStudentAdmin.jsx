@@ -14,7 +14,7 @@ function GrievanceStudentAdmin() {
 
  const fetchcomplaints = async () => {
 
-   const res = await axios.get('http://localhost:3000/grievances');
+   const res = await axios.get('https://aidify.onrender.com/grievances');
    console.log(res.data);
    setgrievanceTickets(res.data);
  }
@@ -44,7 +44,7 @@ function GrievanceStudentAdmin() {
 
     try{
 
-      const res = await axios.put(`http://localhost:3000/respond-grievance/${selectedTicket._id}`, {
+      const res = await axios.put(`https://aidify.onrender.com/respond-grievance/${selectedTicket._id}`, {
         response: e.target.elements.feedback.value,
        
       });
@@ -124,7 +124,7 @@ function GrievanceStudentAdmin() {
     <Box key={index} mb={2}>
     <Text>{attachment.filename}</Text>
     <Button as="a"
-      href={`http://localhost:3000/uploads/${attachment.filename}`}
+      href={`https://aidify.onrender.com/uploads/${attachment.filename}`}
       target="_blank"
       download
       colorScheme="blue"

@@ -35,7 +35,7 @@ function GrievanceNewTicket() {
       formData.append('username', username);
       formData.append('attachments', file); // Make sure 'file' is a File object
   
-      const response = await axios.post('http://localhost:3000/save-grievance', formData, {
+      const response = await axios.post('https://aidify.onrender.com/save-grievance', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
