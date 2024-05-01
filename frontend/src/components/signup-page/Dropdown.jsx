@@ -37,7 +37,7 @@ export default function Dropdown({handleToggleDropdown }) {
         top="80px"
         right="160px"
         borderRadius={'5px'}
-        bg="#353440"
+        bg="#b3b3b3"
         w="210px"
         h="270px"
         display={'flex'}
@@ -53,24 +53,21 @@ export default function Dropdown({handleToggleDropdown }) {
           h="85px"
           borderRadius="100px"
           color="btng"
-          bg="#32313B"
+          bg="white"
           size="md"
         />
         <Text color="black" fontSize={'md'}>
           {username}
         </Text>
         {auth.currentUser && auth.currentUser.email && (
-          <Text color="txtg" fontSize={'12px'} mb="10px">
+          <Text color="white" fontSize={'12px'} mb="10px">
             {isRegistered?auth.currentUser.email: ''}
           </Text>
         )}
        { isRegistered &&
        <>
-        <Button w="100px" h="40px" color="black" bg="btng" onClick={() => navigate('/profile')}>
-          Profile
-        </Button>
       
-        <Button w="100px" h="40px" color="black" bg="btng" onClick={handleLogout}>
+        <Button w="100px" h="40px" color="white" bg="btng" onClick={handleLogout}>
           Log Out
         </Button>
         </>

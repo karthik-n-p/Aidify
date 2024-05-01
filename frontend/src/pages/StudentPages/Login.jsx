@@ -179,9 +179,9 @@ const checkAdmin = async (user) => {
           </Box>
           <Flex ml="70px" direction="column" justifyContent="center">
             <Text mt="10px">Email</Text>
-            <Input ref={emailRef} placeholder="Email" w="350px" h="45px" bg="#444857" borderRadius="4px" mt="10px" />
+            <Input ref={emailRef} placeholder="Email" w="350px" h="45px" bg="#e0f0ff" borderRadius="4px" mt="10px" />
             <Text mt="10px">Password</Text>
-            <Input ref={passwordRef} placeholder="Password" type="password" w="350px" h="45px" bg="#444857" borderRadius="4px" mt="10px" />
+            <Input ref={passwordRef} placeholder="Password" type="password" w="350px" h="45px" bg="#e0f0ff" borderRadius="4px" mt="10px" />
             <Button type="submit" w="350px" h="45px" bg="btng" borderRadius="4px" mt="20px" color="white" onClick={handleLogin}>
               Log In
             </Button>
