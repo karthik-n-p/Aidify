@@ -333,9 +333,9 @@ function Marketplace() {
                 <Text fontSize="sm" color="gray.600">
                   {product.description}
                 </Text>
-                <Text fontSize="sm">Price: ${product.price}</Text>
+                <Text fontSize="sm">Price: {product.price}</Text>
                 <Text fontSize="sm">Meeting Point: {product.meetingPoint}</Text>
-                <Text fontSize="sm">Email: {product.email}</Text>
+                <Text fontSize="sm">Phone Number: {product.email}</Text>
                 {!viewingMyProducts && (
                   <Button onClick={() => handleBookProduct(product._id)} colorScheme="teal" mt={2}>
                     Book Product
