@@ -36,7 +36,7 @@ const Header = () => {
       <Link to="/" style={{ textDecoration: 'none' }}>
       <Flex alignItems="center">
         
-        <img src="./assets/aidifylogo.jpg" alt="Logo" style={{ width: '70px', height: '70px', borderRadius: '50%', backgroundColor: 'white' }} />
+        <img src="/static/images/aidifylogo.jpg" alt="Logo" style={{ width: '70px', height: '70px', borderRadius: '50%', backgroundColor: 'white' }} />
 
         
         <Text as="h1" ml="5px" color="#0000cc" fontWeight="bold" fontSize="3xl" borderRadius="20px" px="3" py="1" textAlign="center" border="1px solid white"  style={{ letterSpacing: '2px' }} >

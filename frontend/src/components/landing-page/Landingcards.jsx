@@ -38,11 +38,11 @@ function Landingcards() {
     {/* Right Section (Image) */}
     <Box flex="1" p="4" mt="-40px">
     <Flex>
-      <img src="./assets/grievance.png" alt="Image 1" style={{ width: '100%', height: 'auto', maxWidth: '230px', marginLeft: "18%" }} />
+      <img src="/static/images/grievance.png" alt="Image 1" style={{ width: '100%', height: 'auto', maxWidth: '230px', marginLeft: "18%" }} />
       </Flex>
       <Flex flexDirection="row">
-        <img src="./assets/collegebus.png" alt="Image 2" style={{ width: '100%', height: 'auto', maxWidth: '200px' }} />
-        <img src="./assets/marketplace.png" alt="Image 3" style={{ width: '100%', marginLeft: '30px' , height: 'auto', maxWidth: '200px' }} />
+        <img src="/static/images/collegebus.png" alt="Image 2" style={{ width: '100%', height: 'auto', maxWidth: '200px' }} />
+        <img src="/static/images//marketplace.png" alt="Image 3" style={{ width: '100%', marginLeft: '30px' , height: 'auto', maxWidth: '200px' }} />
       </Flex>
     
       </Box>
