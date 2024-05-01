@@ -832,6 +832,7 @@ app.put('/refresh-seats', async (req, res) => {
         return bus;
 
       });
+      await bus.save(); 
 
     }
 
@@ -841,7 +842,7 @@ app.put('/refresh-seats', async (req, res) => {
 
    
 
-    await bus.save();
+  
 
     res.status(200).json({ success: true });
 
