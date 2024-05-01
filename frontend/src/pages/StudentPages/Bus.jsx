@@ -30,7 +30,7 @@ function Bus() {
 
         // Check if user has bus pass
         const data = localStorage.getItem('authData');
-        const email = JSON.parse(data).email;
+        var email = JSON.parse(data).email;
         console.log("email",email)
         const userdata  = response.data[0].users;
         console.log("userdata",userdata )

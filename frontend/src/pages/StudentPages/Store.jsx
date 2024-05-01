@@ -276,7 +276,7 @@ function Marketplace() {
   console.log('showmyproducts', viewingMyProducts);
 
   return (
-    <VStack spacing={8} align="flex-start" p="20px 120px">
+    <VStack spacing={8} align="flex-start" p="20px 120px" bg={'bg'}>
       <HStack justify="space-between" w="100%">
         <Heading as="h1" size="xl">
           Marketplace

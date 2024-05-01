@@ -4,9 +4,9 @@ import {Link} from 'react-router-dom'
 
 function Landingcards() {
   return (
-    <Flex>
+    <Flex align={'center'} justifyContent={'center'}>
     {/* Left Section */}
-    <Box flex="1" p="4" ml="10%">
+    <Box flex="1" p="4" ml="15%" marginTop={'10%'}>
       <Heading 
        as="h1"
        size="xl"
