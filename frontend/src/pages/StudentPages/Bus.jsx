@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Select, Button, VStack, Text, HStack, Grid, Image } from '@chakra-ui/react';
+import { Box, Select, Button, VStack, Text, HStack, Grid, Image, Heading } from '@chakra-ui/react';
 import axios from 'axios';
 
 function Bus() {
@@ -16,15 +16,20 @@ function Bus() {
     async function fetchBuses() {
       try {
         const response = await axios.get('http://localhost:3000/get-buses');
+        console.log("response ",response)
         setBuses(response.data[0].busDetails);
         const busdata = response.data[0].busDetails;
         const route = [...new Set(busdata.map((bus) => bus.route))];
         setRoute(route);
       } catch (error) {
+        
         console.error('Error fetching buses:', error);
       }
+      
+      
     }
     fetchBuses();
+    
   }, []);
 
   const handleRouteChange = (event) => {
@@ -94,7 +99,9 @@ function Bus() {
 
 
   return (
-    <Box pl={150}>
+    <Box pl={150} minHeight="200px">
+      <Heading as="h1" mt ="20px" mb="20px" size="xl">College Bus Seat Reservation</Heading>
+
       <Select placeholder="Select Route" onChange={handleRouteChange}>
         {route.map((route) => (
           <option key={route} value={route}>
@@ -110,7 +117,7 @@ function Bus() {
             <Text>Return Time: {bus.returntime}</Text>
             <Grid templateColumns={`repeat(${Math.ceil(Math.sqrt(bus.seats.length))}, 1fr)`} gap={2} mt={4}>
             <Button onClick={() => handleBusSelect(bus)} bg={selectedBus === bus ? "blue.500" : "gray.100"} color={selectedBus === bus ? "white" : "gray.800"} _hover={{ bg: selectedBus === bus ? "blue.600" : "gray.200" }} cursor="pointer">
-                Select Bus
+                Select Seat
               </Button>
 
               {showseat && selectedBus === bus && bus.seats.map((seat) => (

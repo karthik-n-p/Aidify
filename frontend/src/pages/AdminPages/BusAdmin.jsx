@@ -29,8 +29,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { MdRemove } from 'react-icons/md';
 import { FaEdit, FaTrash, FaWhatsapp } from 'react-icons/fa';
-import * as htmlToImage from 'html-to-image';
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from 'html-to-image';
+
+
 
 
 function BusAdmin() {

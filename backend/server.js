@@ -945,6 +945,7 @@ app.post('/save-bus', async (req, res) => {
 app.get('/get-buses', async (req, res) => {
   try {
     const buses = await Bus.find();
+    console.log("buses= ",buses);
 
     res.status(200).json(buses);
 
