@@ -53,7 +53,6 @@ const customTheme = extendTheme({
     txtb: '#000000',
   },
 
-
   styles: {
     global: {
       body: {
