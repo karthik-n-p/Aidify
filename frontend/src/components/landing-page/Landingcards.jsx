@@ -23,8 +23,8 @@ function Landingcards() {
          zIndex: 2
        }}
       >WELCOME TO AIDIFY</Heading>
-      <Heading as="h2" size="2xl" mb="3"  style={{fontFamily: '"Montserrat", sans-serif'}}>One Stop Platform for</Heading>
-      <Heading as="h2" size="2xl" mb="8"  style={{fontFamily: '"Montserrat", sans-serif'}}>College Routines!</Heading>
+      <Heading as="h2" size="2xl" mb="3"  style={{fontFamily: '"Montserrat", sans-serif', color: 'black'}}>One Stop Platform for</Heading>
+      <Heading as="h2" size="2xl" mb="8"  style={{fontFamily: '"Montserrat", sans-serif', color: 'black'}}>College Routines!</Heading>
       <Text fontSize="l" color="grey">
       Our website helps college students to deal with every college related matter with extra ease.
       </Text>
