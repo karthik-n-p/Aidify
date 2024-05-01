@@ -30,6 +30,7 @@ import GrievanceStudent from './pages/StudentPages/GrevanceStudent';
 import GrievanceNewTicket from './pages/StudentPages/GrievanceNewTicket';
 import Marketplace from './pages/StudentPages/Store'; 
 import Bus from './pages/StudentPages/Bus';
+import BookSeat from './pages/StudentPages/BookSeat';
 
 // Create a custom theme with the desired default color mode (dark)
 const customTheme = extendTheme({
@@ -165,6 +166,8 @@ const App = () => {
             {/*Bus Management*/}
               <Route path='/busManagement' element={<AdminBusPanel />} />
               <Route path='/bus' element={<Bus />} />
+              <Route path='/bookseat' element={<BookSeat />} />
+
 
        
 
