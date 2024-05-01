@@ -32,7 +32,6 @@ import GrievanceStudent from './pages/StudentPages/GrevanceStudent';
 import GrievanceNewTicket from './pages/StudentPages/GrievanceNewTicket';
 import Marketplace from './pages/StudentPages/Store'; 
 import Bus from './pages/StudentPages/Bus';
-import BookSeat from './pages/StudentPages/BookSeat';
 
 
 // Create a custom theme with the desired default color mode (dark)
@@ -106,7 +105,7 @@ const App = () => {
           console.log("user data  ",user);
           
   
-          localStorage.setItem('authData', JSON.stringify({ username: userData.username, uid: user.uid, isadmin: isAdmin }));
+          localStorage.setItem('authData', JSON.stringify({ username: userData.username, uid: user.uid, isadmin: isAdmin, email: user.email }));
 
           //now to retrive local storage data we can use localStorage.getItem('authData')
         
@@ -115,7 +114,7 @@ const App = () => {
           console.log("user data of user ",user);
           setUsername(user.displayName);
           setIsRegistered(true);
-          localStorage.setItem('authData', JSON.stringify({ username: user.displayName, uid: user.uid, isadmin: isAdmin }));
+          localStorage.setItem('authData', JSON.stringify({ username: user.displayName, uid: user.uid, isadmin: isAdmin , email: user.email}));
         
         }
       
@@ -169,7 +168,6 @@ const App = () => {
             {/*Bus Management*/}
               <Route path='/busManagement' element={<BusAdmin/>} />
               <Route path='/bus' element={<Bus />} />
-             <Route path='bus/bookSeat/:busno/:time/:route' element={<BookSeat />} />
 
 
        
