@@ -28,7 +28,7 @@ function Bus() {
 
         // Check if user has bus pass
         const data = localStorage.getItem('authData');
-        const email = JSON.parse(data).email;
+        var email = JSON.parse(data).email;
         console.log("email",email)
         const userdata  = response.data[0].users;
         console.log("userdata",userdata )
@@ -92,7 +92,7 @@ function Bus() {
 
   const handleDownloadImage = () => {
     const link = document.createElement('a');
-    link.href = `https://via.placeholder.com/300?text=Seat+${selectedSeat.seatNo}+on+Bus+No/Name+${selectedBus.busNo}+Booked+by+${localStorage.getItem('email')}`;
+    link.href = `https://via.placeholder.com/300?text=Seat+${selectedSeat.seatNo}+on+Bus+No/Name+${selectedBus.busNo}+Booked+by+thushar`;
     link.download = 'bus_ticket.png';
     document.body.appendChild(link);
     link.click();
