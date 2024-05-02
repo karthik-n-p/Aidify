@@ -36,6 +36,7 @@ function Marketplace() {
   console.log('uid', sellersuid);
   console.log('username', seller);
 
+
   const [products, setProducts] = useState([]);
   const [formData, setFormData] = useState({
     title: '',
@@ -44,6 +45,7 @@ function Marketplace() {
     meetingPoint: '',
     email: '',
     image: '',
+    attachments: null
   });
 
   const [showAddProductForm, setShowAddProductForm] = useState(false);
@@ -57,17 +59,23 @@ function Marketplace() {
   useEffect(() => {
     fetchProducts();
   }, []);
+  
 
   const fetchProducts = async () => {
     try {
       const response = await axios.get('https://aidify.onrender.com/products');
       const data = response.data;
+      console.log('data', data);
       const filteredData = viewingMyProducts
         ? data.filter((product) => product.sellersuid === sellersuid)
         : data.filter((product) => product.sellersuid !== sellersuid);
 
+        console.log('filteredData', filteredData); 
+
       // Filter out the products that are not sold
       const filteredData2 = filteredData.filter((product) => product.status !== 'sold');
+      
+      console.log('filteredData2', filteredData2);
 
       setProducts(filteredData2);
     } catch (error) {
@@ -78,17 +86,34 @@ function Marketplace() {
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const handleImageUpload = (e) => {
+    setFormData({ ...formData, attachments: e.target.files[0] }); 
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formDataWithSeller = {
-        ...formData,
-        seller: seller,
-        sellersuid: sellersuid,
-      };
-      console.log('Form data with seller:', formDataWithSeller);
-      await axios.post('https://aidify.onrender.com/save-product', formDataWithSeller);
+      const formDataWithSeller = new FormData(); // Create a FormData object
+      // Append form data fields
+      formDataWithSeller.append('title', formData.title);
+      formDataWithSeller.append('description', formData.description);
+      formDataWithSeller.append('price', formData.price);
+      formDataWithSeller.append('meetingPoint', formData.meetingPoint);
+      formDataWithSeller.append('email', formData.email);
+      formDataWithSeller.append('image', formData.image); // Append image file
+      formDataWithSeller.append('seller', seller);
+      formDataWithSeller.append('sellersuid', sellersuid);
+    
+      formDataWithSeller.append('attachments', formData.attachments); // Append image file
+      console.log('formDataWithSeller', formDataWithSeller);
+      // Make POST request with formDataWithSeller
+      await axios.post('https://aidify.onrender.com/products/save-product', formDataWithSeller, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Set content type header for FormData
+        },
+      });
+
       fetchProducts();
       setShowAddProductForm(false);
 
@@ -158,8 +183,9 @@ function Marketplace() {
 
   const handleMyProduct = async () => {
     try {
-      const response = await axios.get('https://aidify.onrender.com/products');
+      const response = await axios.get('https://aidify.onrender.com/products/products');
       const data = response.data;
+    
       const filteredData = data.filter((product) => product.sellersuid === sellersuid);
       setProducts(filteredData);
     
@@ -296,18 +322,23 @@ function Marketplace() {
           Add New Product
         </Heading>
         {showAddProductForm && (
-          <form onSubmit={handleSubmit}>
-            <VStack spacing={3} align="flex-start">
-              <Input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="Title" />
-              <Textarea name="description" value={formData.description} onChange={handleInputChange} placeholder="Description" />
-              <Input type="text" name="price" value={formData.price} onChange={handleInputChange} placeholder="Price" />
-              <Input type="text" name="meetingPoint" value={formData.meetingPoint} onChange={handleInputChange} placeholder="Meeting Point" />
-              <Input type="tel" name="email" value={formData.email} onChange={handleInputChange} placeholder="PhoneNumber" />
-              <Input type="text" name="image" value={formData.image} onChange={handleInputChange} placeholder="Image URL" />
-              <Button type="submit">Add Product</Button>
-            </VStack>
-          </form>
-        )}
+  <form onSubmit={handleSubmit}>
+    <VStack spacing={3} align="flex-start">
+      <Input type="text" name="title" value={formData.title} onChange={handleInputChange} placeholder="Title" />
+      <Textarea name="description" value={formData.description} onChange={handleInputChange} placeholder="Description" />
+      <Input type="text" name="price" value={formData.price} onChange={handleInputChange} placeholder="Price" />
+      <Input type="text" name="meetingPoint" value={formData.meetingPoint} onChange={handleInputChange} placeholder="Meeting Point" />
+      <Input type="tel" name="email" value={formData.email} onChange={handleInputChange} placeholder="PhoneNumber" />
+      <input type="radio" id="uploadByUrl" name="imageType" value="url" onChange={() => setFormData({ ...formData, imageType: 'url' })} checked={formData.imageType === 'url'} />
+      <label htmlFor="uploadByUrl">Upload Image by URL</label>
+      <Input type="text" name="image" value={formData.image} onChange={handleInputChange} placeholder="Image URL" style={{ display: formData.imageType === 'url' ? 'block' : 'none' }} />
+      <input type="radio" id="uploadByFile" name="imageType" value="file" onChange={() => setFormData({ ...formData, imageType: 'file' })} checked={formData.imageType === 'file'} />
+      <label htmlFor="uploadByFile">Upload Image File</label>
+      <Input  type="file" name="attachments" onChange={handleImageUpload} style={{ display: formData.imageType === 'file' ? 'block' : 'none' }} />
+      <Button type="submit">Add Product</Button>
+    </VStack>
+  </form>
+)}
       </Box>
       <Box w="100%">
         <Box mb={4}>
@@ -326,13 +357,19 @@ function Marketplace() {
           {products.map((product) => (
             <GridItem key={product._id}>
               <Box p={4} borderWidth="1px" borderRadius="md" boxShadow="md">
-                <Image w={'270px'} h={'250px'} src={product.image} alt={product.title} borderRadius="md" />
+              {product.attachments && product.attachments.length > 0 && product.attachments[0] !== '' ? (
+  <Image src={`https://aidify.onrender.com/uploads/${product.attachments[0].filename}`} alt={product.attachments[0].filename} />
+) : (
+  <Image src={product.image} alt={'No Image Uploaded'} />
+)}
+
                 <Text mt={2} fontWeight="semibold">
                   {product.title}
                 </Text>
                 <Text fontSize="sm" color="gray.600">
                   {product.description}
                 </Text>
+              
                 <Text fontSize="sm">Price: {product.price}</Text>
                 <Text fontSize="sm">Meeting Point: {product.meetingPoint}</Text>
                 <Text fontSize="sm">Phone Number: {product.email}</Text>

@@ -29,6 +29,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { MdRemove } from 'react-icons/md';
 import { FaEdit, FaTrash, FaWhatsapp } from 'react-icons/fa';
+import html2canvas from 'html2canvas';
+
 
 
 function BusAdmin() {
@@ -290,8 +292,58 @@ function BusAdmin() {
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
+  const handleDownloadTableImage = () => {
+    // Find the table element by its id
+    const table = document.getElementById('bus-schedule-table');
+
+    //remove buttons from table
+    const buttons = table.querySelectorAll('Button');
+    //set display to none for buttons for 2sec
+    buttons.forEach((button) => {
+        button.style.display = 'none';
+    });
+    setTimeout(() => {
+        buttons.forEach((button) => {
+            button.style.display = 'block';
+        });
+    }, 10);
+
+    //also remove last column of actions
+    const rows = table.querySelectorAll('tr');
+    rows.forEach((row) => {
+        row.lastChild.display = 'none';
+    });
+
+    setTimeout(() => {
+        rows.forEach((row) => {
+            row.lastChild.display = 'block';
+        });
+    }, 10);
+
+
+
+    // Use html2canvas to capture the table as an image
+    html2canvas(table)
+      .then((canvas) => {
+        // Convert the canvas to a data URL
+        const imageUrl = canvas.toDataURL('image/png');
+
+        // Create a temporary anchor element
+        const link = document.createElement('a');
+        link.href = imageUrl;
+        link.download = 'bus_schedule.png';
+
+        // Trigger the download
+        link.click();
+      })
+      .catch((error) => {
+        console.error('Error capturing table as image:', error);
+      });
+  };
+
+
   return (
-    <HStack pl={150}    bg={'bg'}>
+    <HStack pl={150} pt={100}    bg={'bg'}>
       {/* Add User Modal */}
       <Modal isOpen={showAddUserModal} onClose={() => setShowAddUserModal(false)}>
         <ModalOverlay />
@@ -377,8 +429,11 @@ function BusAdmin() {
       {/* View All Buses Section */}
       <Box>
         <Heading as="h2" size="md" mb={4}>All Buses</Heading>
-        <Button onClick={handleShareOnWhatsApp} colorScheme="green" leftIcon={<FaWhatsapp />}>Share Schedule via WhatsApp</Button>
-        <Table variant="striped">
+        <Button onClick={handleShareOnWhatsApp} colorScheme="green" mr={'20px'} leftIcon={<FaWhatsapp />}>Share Schedule via WhatsApp</Button>
+        <Button onClick={handleDownloadTableImage} colorScheme="blue">
+        Download Table as Image
+      </Button>
+        <Table variant="striped" id="bus-schedule-table">
           <Thead>
             <Tr>
               <Th>Bus No/Name</Th>
@@ -399,7 +454,7 @@ function BusAdmin() {
                 <Td>{bus.seats.length}</Td>
                 <Td>
                     <HStack>
-                  <Button mr={'20px'} colorScheme="red" size="sm" onClick={() => handleRemoveBus(bus._id)}><FaTrash/></Button>
+                  <Button className='Button' mr={'20px'} colorScheme="red" size="sm" onClick={() => handleRemoveBus(bus._id)}><FaTrash/></Button>
                   <Button colorScheme="green" size="sm" onClick={() => handleOpenEditModal(bus)}><FaEdit/></Button>
                   {bus.availiable ? <Button colorScheme="blue" size="sm" onClick={() => handleMarkUnavailable(bus._id)}>Mark Unavailable</Button> : <Button colorScheme="green" size="sm" onClick={() => handleMarkUnavailable(bus._id)}>Mark Available</Button>}
                 

@@ -3,6 +3,8 @@ import { Box, Select, Button, VStack, Text, HStack, Grid, Image, Heading } from 
 import axios from 'axios';
 import { MdError } from 'react-icons/md';
 
+import ticketbg from '../../../assets/th.png';
+
 function Bus() {
   const [buses, setBuses] = useState([]);
   const [route, setRoute] = useState([]);
@@ -13,7 +15,6 @@ function Bus() {
   const [selectedSeat, setSelectedSeat] = useState(null);
   const [isBookingSuccess, setIsBookingSuccess] = useState(false);
   const [userhaspass, setUserhaspass] = useState(false);
-  const [time, setTime] = useState('');
 
 
   useEffect(() => {
@@ -21,8 +22,13 @@ function Bus() {
       try {
         const response = await axios.get('https://aidify.onrender.com/get-buses');
         console.log("response ",response)
-        setBuses(response.data[0].busDetails);
 
+
+        //filter bus with availiable as true
+        const availiablebuses = response.data[0].busDetails.filter((bus) => bus.availiable === true);
+        console.log("availiablebuses",availiablebuses)
+        setBuses(availiablebuses);
+      
 
         const busdata = response.data[0].busDetails;
         const route = [...new Set(busdata.map((bus) => bus.route))];
@@ -94,20 +100,72 @@ function Bus() {
   };
 
   const handleDownloadImage = () => {
-    const link = document.createElement('a');
-    link.href = `https://via.placeholder.com/300?text=Seat+No+${selectedSeat.seatNo}+on+${time}+Bus+No+${selectedBus.busNo}+Booked+by+${localStorage.getItem('email')}`;
-    link.download = 'bus_ticket.png';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+    // Create a canvas element
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas dimensions
+    canvas.width = 1000; // Adjust as needed
+    canvas.height = 500; // Adjust as needed
+
+  // Create a new image element for the background image
+  const backgroundImage = document.createElement('img');
+  backgroundImage.crossOrigin = 'Anonymous';
+    // Set the source of the background image
+    backgroundImage.src = ticketbg; // Replace with the path to your background image
+
+    // Once the background image has loaded, draw it onto the canvas
+    backgroundImage.onload = () => {
+        // Draw the background image onto the canvas
+        ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
+        // Set font size and style
+        const fontSize = 20; // Custom font size
+        ctx.font = `${fontSize}px Arial`; // Set font family and size
+        ctx.fillStyle = '#000'; // Set text color
+
+        //today's date
+        var today = new Date().toDateString();
+
+        // Generate text dynamically
+        const seatNumber = `Seat number ${selectedSeat.seatNo} on ${timesection === 'Morning' ? 'the bus departing at ' + selectedBus.starttime : 'the bus returning at ' + selectedBus.returntime}`;
+        const bookingInfo = `Booked by ${localStorage.getItem('username')} on ${today}.`;
+        
+        const text = `${seatNumber}\n${bookingInfo}`;
+        
+        // Calculate text width and position
+        const textWidth = ctx.measureText(text).width;
+        const textX = (canvas.width - textWidth) / 2; // Center text horizontally
+        const textY = canvas.height / 2; // Center text vertically
+
+        // Draw text on canvas
+        ctx.fillText(text, textX, textY);
+
+        // Convert canvas to data URL
+        const imageUrl = canvas.toDataURL('image/png');
+
+        // Create a link element to download the image
+        const link = document.createElement('a');
+        link.href = imageUrl;
+        link.download = 'bus_ticket.png';
+
+        // Append link to body and trigger download
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up
+        document.body.removeChild(link);
+    };
+};
 
 
 
 
-    //automatically set availiablity of seat isbooked to flase after 12 am
+const [timesection, setTimesection] = useState('');
 
+   
     useEffect(() => {
+     
 
       const handleSeatAvailablity = async () => {
         try{
@@ -123,36 +181,42 @@ function Bus() {
       }
       handleSeatAvailablity();
     }
-    ,[buses]);
+    ,[timesection])
+
 
 
     //handle time selection
 
-    const [timesection, setTimesection] = useState('');
+   
     const handletimesection = (event) => {
       setTimesection(event.target.value);
+      console.log("timesection",event.target.value)
 
       //declare a variable to store the time if the section is morning set the time to start time else set the time to return time
 
       var time = '';
 
       if(event.target.value === 'morning'){
-        busDetails.map((bus) => (
-          time = bus.starttime
-        ));
-
+     //retrive the bus details with route with the selected route 
+      const bus = buses.find((bus) => bus.route === selectedRoute);
+    
 
       }
       else{
-        busDetails.map((bus) => (
-          time = bus.returntime
-        ));
+       
+
+        
+
+       
        
       }
       console.log("inside timesection",busDetails)
 
      
     };
+
+    const username = localStorage.getItem('username');
+    console.log("username",username)
 
 
 
@@ -162,10 +226,11 @@ function Bus() {
       <Heading as="h1" size="xl" mb="20px">
         College Bus Seat Reservation
       </Heading>
-      <Select id="time" mb="20px" placeholder="Select Time" value={time} onChange={(e) => setTime(e.target.value)}>
+      <Select id="time" mb="20px" placeholder="Select Time" value={timesection} onChange={handletimesection}>
           <option value="Morning">Morning</option>
           <option value="Evening">Evening</option>
         </Select>
+    
       <Select placeholder="Select Route" onChange={handleRouteChange}>
         {route.map((route) => (
           <option key={route} value={route}>
@@ -173,14 +238,16 @@ function Bus() {
           </option>
         ))}
       </Select>
+
+     
       
 
       <VStack mt={4} spacing={4}>
         {busDetails.map((bus) => (
           <Box key={bus._id} borderWidth="1px" borderRadius="lg" p={4}>
             <Text fontSize="lg" fontWeight="bold" mb={2}>Bus Name/No: {bus.busNo}</Text>
-            <Text>Start Time: {bus.starttime}</Text>
-            <Text>Return Time: {bus.returntime}</Text>
+            {/*if selcted timesection is morning show the start time else show the return time */}
+            <Text fontSize="lg" fontWeight="bold" mb={2}>Time: {timesection === 'Morning' ? bus.starttime : bus.returntime}</Text>
             <Grid templateColumns={`repeat(${Math.ceil(Math.sqrt(bus.seats.length))}, 1fr)`} gap={2} mt={4}>
             <Button onClick={() => handleBusSelect(bus)} bg={selectedBus === bus ? "blue.500" : "gray.100"} color={selectedBus === bus ? "white" : "gray.800"} _hover={{ bg: selectedBus === bus ? "blue.600" : "gray.200" }} cursor="pointer">
                 Select Seat

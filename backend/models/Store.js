@@ -28,7 +28,7 @@ const productSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        required: true
+        required: false
     },
     status: {
         type: String,
@@ -42,7 +42,32 @@ const productSchema = new mongoose.Schema({
     buyer: {
         type: String,
         default: ''
-    }
+    },
+    attachments: [
+       
+        {
+            filename: {
+                type: String,
+             
+            },
+            path: {
+                type: String,
+              
+            },
+            size: {
+                type: String,
+               
+            },
+            mimetype: {
+                type: String,
+               
+            },
+            data: {
+                type: Buffer, // Store file data as Buffer
+                
+            }
+        }
+    ],
 
 });
 

@@ -21,6 +21,23 @@ app.use(express.json());
 require('dotenv').config();
 
 
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
+
+// Define storage for uploaded files
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // Save files in the 'uploads' folder
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+// Create upload middleware
+const upload = multer({ storage: storage });
+
 
 
 mongoose.connect(process.env.MONGODB_URI,)
@@ -170,9 +187,22 @@ const Product = require('./models/Store');
 
 // Endpoint to save product details in MongoDB
 
-app.post('/save-product', async (req, res) => {
+app.post('/save-product', upload.array('attachments', 5), async (req, res) => {
   try {
     const { title, description, seller, price, meetingPoint, email, image, sellersuid } = req.body;
+
+    //upload.array('attachments', 5) is used to upload multiple files with the same name 'attachments' and maximum 5 files can be uploaded
+    //req.files contains the uploaded files and req.body contains the text data
+
+    // Create array to store attachment details
+    const attachments = req.files.map(file => {
+      return {
+        filename: file.originalname,
+        path: file.path, // Save the file path
+        size: file.size,
+        mimetype: file.mimetype
+      };
+    });
 
     // Create a new Product document
     const product = new Product({
@@ -184,7 +214,9 @@ app.post('/save-product', async (req, res) => {
       email,
       image,
       sellersuid,
+      attachments,
     });
+
 
     console.log("seller ",seller);
 
@@ -449,23 +481,6 @@ app.put('/available-product/:productId', async (req, res) => {
 
 );
 
-
-const path = require('path');
-const fs = require('fs');
-const multer = require('multer');
-
-// Define storage for uploaded files
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/'); // Save files in the 'uploads' folder
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-
-// Create upload middleware
-const upload = multer({ storage: storage });
 
 //Endpoint to save grievance details in MongoDB for students it will contain files as attachments
 
@@ -800,12 +815,13 @@ app.put('/refresh-seats', async (req, res) => {
 
     const bus = await Bus.findOne();
 
-    //refresh the booked seats in the bus when a day is passed to false and bookedBy to null at 6: 38 pm
+    //refresh the booked seats in the bus when a day is passed to false and bookedBy to null at 12 am and 12 pm
 
      const currentDate = new Date();
+     console.log("currentDate",currentDate.getHours(),currentDate.getMinutes(),currentDate.getSeconds());
 
 
-    if (currentDate.getHours() == 0 && currentDate.getMinutes() == 0 && currentDate.getSeconds() == 0) {
+    if (currentDate.getHours() == 0 && currentDate.getMinutes() == 0 || currentDate.getHours() == 12 && currentDate.getMinutes() == 0 && currentDate.getSeconds() == 0) {
 
       bus.busDetails = bus.busDetails.map(bus => {
 
