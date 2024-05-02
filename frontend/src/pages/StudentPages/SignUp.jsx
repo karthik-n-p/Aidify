@@ -1,6 +1,6 @@
 import React from 'react'
 import { createUserWithEmailAndPassword ,signInWithPopup,GoogleAuthProvider,getAuth} from 'firebase/auth';
-import  { Box, Flex,Divider, Spacer, IconButton, Input, InputGroup, InputRightElement, Circle, useColorMode, Avatar, Button, HStack, Image,Heading,Text } from '@chakra-ui/react';
+import  { Box, Flex,Divider, Spacer, IconButton, Input, InputGroup, InputRightElement, Circle, useColorMode, Avatar, Button, HStack, Image,Heading,Text, AlertIcon, Alert } from '@chakra-ui/react';
 import { FaGithub, FaGoogle } from 'react-icons/fa';
 import { auth,firestore } from './firebase-auth';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,8 @@ const SignUpPage = ({ handleSignupSuccess }) =>  {
     const [registerPassword ,setRegisterPassword] = React.useState("")
     const [registerUsername, setRegisterUsername] = React.useState("")
     const navigate = useNavigate();
+
+    const [error, setError] = React.useState("");
 
     const register = async () => {
         try {
@@ -45,6 +47,28 @@ const SignUpPage = ({ handleSignupSuccess }) =>  {
 
 
          catch (error) {
+          if(error.code === 'auth/user-not-found'){
+            setError('User not found with this email address ')
+          }
+           if(error.code === 'auth/wrong-password'){
+            setError('Wrong password check again')
+          }
+          else if(error.code === 'auth/email-already-in-use'){
+            setError('Email already in use')
+          }
+          else if(error.code === 'auth/weak-password'){
+            setError('Password is too weak.Password should be at least 6 characters long')
+          }
+          else if(error.code === 'auth/invalid-email'){
+            setError('Invalid email address')
+          }
+          else if(error.code === 'auth/operation-not-allowed'){
+            setError('Email/password accounts are not enabled. Enable email/password accounts in the Firebase Console, under the Auth tab.')
+          }
+          else if(error.code === 'auth/invalid-email'){
+            setError('Invalid email address')
+          }
+        
             console.log(error)
         }
 
@@ -71,6 +95,31 @@ const SignUpPage = ({ handleSignupSuccess }) =>  {
     handleSignupSuccess();
     navigate('/');
   } catch (error) {
+   
+   //show potential sign-up errors
+    if(error.code === 'auth/user-not-found'){
+    setError('User not found with this email address ')
+  }
+   if(error.code === 'auth/wrong-password'){
+    setError('Wrong password check again')
+  }
+  else if(error.code === 'auth/email-already-in-use'){
+    setError('Email already in use')
+  }
+  else if(error.code === 'auth/weak-password'){
+    setError('Password is too weak.Password should be at least 6 characters long')
+  }
+  else if(error.code === 'auth/invalid-email'){
+    setError('Invalid email address')
+  }
+  else if(error.code === 'auth/operation-not-allowed'){
+    setError('Email/password accounts are not enabled. Enable email/password accounts in the Firebase Console, under the Auth tab.')
+  }
+  else if(error.code === 'auth/invalid-email'){
+    setError('Invalid email address')
+  }
+
+
     console.log("Google sign-in failed:", error);
   }
 };
@@ -95,7 +144,7 @@ const SignUpPage = ({ handleSignupSuccess }) =>  {
                
 
                   <Text fontSize={"md"} fontWeight={"400"} m="25px 0 10px 0">How social log in works</Text>
-                  <Text w="300px" h="130px" color="txtg" fontSize={'sm'}>By signing up, you agree to CodeSpace Terms of Service , Code of Conduct , and Privacy Policy .</Text>
+                  <Text w="300px" h="130px" color="txtg" fontSize={'sm'}>By signing up, you agree to Aidify Terms of Service , Code of Conduct , and Privacy Policy .</Text>
   
     </Flex>
     <Box mt="100px" ml="55px" display="flex" flexDirection={'column'} alignItems="center" justifyContent="center">
@@ -121,6 +170,17 @@ const SignUpPage = ({ handleSignupSuccess }) =>  {
       <Input placeholder="Password" w="350px" h="45px" bg="#444857" borderRadius="4px" mt="10px" onChange={(event) => {setRegisterPassword(event.target.value)}}  />
       <Button w="350px" h="45px" bg="btng" borderRadius="4px" mt="20px" color="white" onClick={register}>Sign Up</Button>
 
+
+
+            {error && (
+            <Alert status="error" mt="10px">
+              <AlertIcon />
+              {error}
+            </Alert>
+          )}
+      <Text mt="10px" fontSize="sm">Already have an account? <Text color="blue" onClick={() => navigate('/login')} cursor="pointer">Sign In</Text></Text>
+
+     
     
 
     </Flex>

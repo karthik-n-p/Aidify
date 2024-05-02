@@ -13,7 +13,6 @@ import Landing from './pages/StudentPages/Landing';
 import Sidebar from './components/landing-page/Navbar';
 import Header from './components/landing-page/header';
 
-import AdminDashboard from './pages/AdminPages/AdminDashboard';
 
 import BusAdmin from './pages/AdminPages/BusAdmin';
 
@@ -25,7 +24,7 @@ import './index.css';
 
 import axios from 'axios';
 
-import AdminBusPanel from './pages/AdminPages/AdminDashboard';
+
 import GrevanceStudentAdmin from './pages/AdminPages/GrevanceStudentAdmin';
 import Store from './pages/StudentPages/Store';
 import GrievanceStudent from './pages/StudentPages/GrevanceStudent';
