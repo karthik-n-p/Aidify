@@ -308,17 +308,19 @@ function BusAdmin() {
         });
     }, 10);
 
-    //also remove last column of actions
-    const rows = table.querySelectorAll('tr');
-    rows.forEach((row) => {
-        row.lastChild.display = 'none';
+    //also remove last column of actions and capacity
+    const ths = table.querySelectorAll('.thh');
+    ths.forEach((th) => {
+        th.style.display = 'none';
     });
-
     setTimeout(() => {
-        rows.forEach((row) => {
-            row.lastChild.display = 'block';
+
+        ths.forEach((th) => {
+            th.style.display = 'block';
         });
     }, 10);
+
+   
 
 
 
@@ -343,7 +345,7 @@ function BusAdmin() {
 
 
   return (
-    <HStack pl={150} pt={100}    bg={'bg'}>
+    <HStack pl={150} gap={10}    bg={'bg'}>
       {/* Add User Modal */}
       <Modal isOpen={showAddUserModal} onClose={() => setShowAddUserModal(false)}>
         <ModalOverlay />
@@ -396,7 +398,7 @@ function BusAdmin() {
                 <FormLabel>Return Time</FormLabel>
                 <Input type="time" placeholder="Enter return time" value={returntime} onChange={(e) => setReturnTime(e.target.value)} />
               </FormControl>
-              <FormControl mt={4} isRequired>
+              <FormControl mt={4} isRequired  >
                 <FormLabel>Capacity</FormLabel>
                 <Input type="text" placeholder="Enter capacity" value={capacity} onChange={(e) => setCapacity(e.target.value)} />
               </FormControl>
@@ -440,8 +442,8 @@ function BusAdmin() {
               <Th>Route</Th>
               <Th>Start Time</Th>
               <Th>Return Time</Th>
-              <Th>Capacity</Th>
-              <Th>Actions</Th>
+              <Th className='thh'>Capacity</Th >
+              <Th className='thh'>Actions</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -451,8 +453,8 @@ function BusAdmin() {
                 <Td>{bus.route}</Td>
                 <Td>{bus.starttime}</Td>
                 <Td>{bus.returntime}</Td>
-                <Td>{bus.seats.length}</Td>
-                <Td>
+                <Td className='thh'>{bus.seats.length}</Td>
+                <Td className='thh'>
                     <HStack>
                   <Button className='Button' mr={'20px'} colorScheme="red" size="sm" onClick={() => handleRemoveBus(bus._id)}><FaTrash/></Button>
                   <Button colorScheme="green" size="sm" onClick={() => handleOpenEditModal(bus)}><FaEdit/></Button>
