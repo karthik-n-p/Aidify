@@ -71,7 +71,7 @@ function GrievanceStudentAdmin() {
   };
 
   return (
-    <Box p={8}>
+    <Box p={8} >
       <Heading as="h2" size="xl" mb={4}>Grievance Tickets</Heading>
       <Table variant="simple">
         <Thead>

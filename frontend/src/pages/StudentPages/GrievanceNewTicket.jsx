@@ -12,7 +12,7 @@ function GrievanceNewTicket() {
   const [file, setFile] = useState(null); 
   const [submitted, setSubmitted] = useState(false);
   const [submissionDateTime, setSubmissionDateTime] = useState('');
-  const username  = localStorage.getItem('username');
+  const [username, setUsername] = useState('');
   const [anonymous, setAnonymous] = useState(false);
   const Navigate = useNavigate();
   
@@ -65,6 +65,11 @@ function GrievanceNewTicket() {
   return (
     <Box p={8} maxWidth="550px" mx="auto">
       <Heading as="h2" size="xl" mb={6}>Create Your Grievance Ticket</Heading>
+      <Box mb={4}>
+        <Text mb={2}>Name</Text>
+        <Input placeholder="Enter your name" value={username} onChange={(e) => setUsername(e.target.value)} />
+      </Box>
+
       <Box mb={4}>
         <Text mb={2}>Ticket Type</Text>
         <Select placeholder="Select ticket type" value={ticketType} onChange={(e) => setTicketType(e.target.value)}>
