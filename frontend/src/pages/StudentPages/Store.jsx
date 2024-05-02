@@ -108,7 +108,7 @@ function Marketplace() {
       formDataWithSeller.append('attachments', formData.attachments); // Append image file
       console.log('formDataWithSeller', formDataWithSeller);
       // Make POST request with formDataWithSeller
-      await axios.post('https://aidify.onrender.com/products/save-product', formDataWithSeller, {
+      await axios.post('https://aidify.onrender.com/save-product', formDataWithSeller, {
         headers: {
           'Content-Type': 'multipart/form-data', // Set content type header for FormData
         },
@@ -131,8 +131,8 @@ function Marketplace() {
 
   const handleSearch = async (searchText) => {
     try {
-      const response = await axios.get(`https://aidify.onrender.com/products`);
-      const filteredProducts = response.data.filter((product) =>
+      
+      const filteredProducts = products.filter((product) =>
         product.title.toLowerCase().includes(searchText.toLowerCase())
       );
       setProducts(filteredProducts);
@@ -144,13 +144,13 @@ function Marketplace() {
   const handleSort = async (sortBy) => {
     try {
       console.log('sortBy', sortBy);
-      const response = await axios.get(`https://aidify.onrender.com/products`);
+     
       if(sortBy === 'price') {
-        const sortedProducts = response.data.sort((a, b) => a.price - b.price);
+        const sortedProducts = products.sort((a, b) => a.price - b.price);
         setProducts(sortedProducts);
       }
       else {
-        const sortedProducts = response.data.sort((a, b) => b.price - a.price);
+        const sortedProducts = products.sort((a, b) => b.price - a.price);
         setProducts(sortedProducts);
       }
       console.log('sortedProducts', products);
@@ -183,7 +183,7 @@ function Marketplace() {
 
   const handleMyProduct = async () => {
     try {
-      const response = await axios.get('https://aidify.onrender.com/products/products');
+      const response = await axios.get('https://aidify.onrender.com/products');
       const data = response.data;
     
       const filteredData = data.filter((product) => product.sellersuid === sellersuid);
