@@ -36,7 +36,7 @@ const SignUpPage = ({ handleSignupSuccess }) =>  {
                 // Add other user data properties as needed
               };
       
-              navigate('/');
+              navigate('/store');
               handleSignupSuccess(userData);
             }
           }
