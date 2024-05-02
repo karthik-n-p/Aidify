@@ -17,6 +17,7 @@ function GrievanceStudentAdmin() {
    const res = await axios.get('https://aidify.onrender.com/grievances');
    console.log(res.data);
    setgrievanceTickets(res.data);
+  
  }
 
   // State to manage modal for displaying ticket details
@@ -85,6 +86,7 @@ function GrievanceStudentAdmin() {
         <Tbody>
           {grievanceTickets.map(ticket => (
             <Tr key={ticket.id}>
+              {console.log("user  ",ticket.username)}
               <Td>{ticket.username}</Td>
               <Td>{ticket.Date}</Td>
               <Td>{ticket.Subject}</Td>

@@ -129,7 +129,7 @@ function Bus() {
 
         // Generate text dynamically
         const seatNumber = `Seat number ${selectedSeat.seatNo} on ${timesection === 'Morning' ? 'the bus departing at ' + selectedBus.starttime : 'the bus returning at ' + selectedBus.returntime}`;
-        const bookingInfo = `Booked by ${localStorage.getItem('username')} on ${today}.`;
+        const bookingInfo = `Booked by Lijina on ${today}.`;
         
         const text = `${seatNumber}\n${bookingInfo}`;
         
